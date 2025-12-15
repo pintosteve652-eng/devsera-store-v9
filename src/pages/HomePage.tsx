@@ -29,7 +29,7 @@ export function HomePage() {
   const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState('');
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 5000]);
+  const [priceRange, setPriceRange] = useState<[number, number] | null>(null);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 12;
@@ -44,16 +44,19 @@ export function HomePage() {
     return Math.max(...products.map(p => p.salePrice || 0), 5000);
   }, [products]);
 
+  // Use the actual price range if set, otherwise use full range
+  const effectivePriceRange = priceRange || [0, maxPrice];
+
   const filteredProducts = useMemo(() => {
     return products.filter(p => {
       const matchesCategory = selectedCategory === 'All' || p.category === selectedCategory;
       const matchesSearch = searchQuery === '' || 
         p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         p.description.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesPrice = (p.salePrice || 0) >= priceRange[0] && (p.salePrice || 0) <= priceRange[1];
+      const matchesPrice = (p.salePrice || 0) >= effectivePriceRange[0] && (p.salePrice || 0) <= effectivePriceRange[1];
       return matchesCategory && matchesSearch && matchesPrice;
     });
-  }, [products, selectedCategory, searchQuery, priceRange]);
+  }, [products, selectedCategory, searchQuery, effectivePriceRange]);
 
   const recentlyAddedProducts = useMemo(() => {
     return [...products].slice(0, 8);
@@ -68,11 +71,11 @@ export function HomePage() {
   const clearFilters = () => {
     setSelectedCategory('All');
     setSearchQuery('');
-    setPriceRange([0, maxPrice]);
+    setPriceRange(null);
     setCurrentPage(1);
   };
 
-  const hasActiveFilters = selectedCategory !== 'All' || searchQuery !== '' || priceRange[0] > 0 || priceRange[1] < maxPrice;
+  const hasActiveFilters = selectedCategory !== 'All' || searchQuery !== '' || priceRange !== null;
 
   if (isLoading && isSupabaseConfigured) {
     return (
@@ -90,7 +93,7 @@ export function HomePage() {
         <h4 className="font-semibold text-xs sm:text-sm uppercase tracking-wide text-gray-500 dark:text-gray-400 mb-2 sm:mb-3">Price Range</h4>
         <div className="px-1 sm:px-2">
           <Slider
-            value={priceRange}
+            value={effectivePriceRange}
             onValueChange={(value) => setPriceRange(value as [number, number])}
             max={maxPrice}
             min={0}
@@ -98,9 +101,9 @@ export function HomePage() {
             className="mb-3 sm:mb-4"
           />
           <div className="flex items-center justify-between text-xs sm:text-sm">
-            <span className="font-mono bg-gray-100 dark:bg-gray-800 px-2 sm:px-3 py-0.5 sm:py-1 rounded-lg">₹{priceRange[0]}</span>
+            <span className="font-mono bg-gray-100 dark:bg-gray-800 px-2 sm:px-3 py-0.5 sm:py-1 rounded-lg">₹{effectivePriceRange[0]}</span>
             <span className="text-gray-400 dark:text-gray-500">to</span>
-            <span className="font-mono bg-gray-100 dark:bg-gray-800 px-2 sm:px-3 py-0.5 sm:py-1 rounded-lg">₹{priceRange[1]}</span>
+            <span className="font-mono bg-gray-100 dark:bg-gray-800 px-2 sm:px-3 py-0.5 sm:py-1 rounded-lg">₹{effectivePriceRange[1]}</span>
           </div>
         </div>
       </div>
