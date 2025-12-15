@@ -7,6 +7,21 @@ import {
   Layers, Type, Megaphone, Tag, Percent, ShoppingBag, Award, Bell,
   Target, TrendingUp, Flame, Coffee, Music, Gamepad2, Tv, Camera
 } from 'lucide-react';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -20,6 +35,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/components/ui/use-toast';
 import { useAdminBannerPosts, BannerPost } from '@/hooks/useBannerPosts';
 import { supabase } from '@/lib/supabase';
+import { SortableBannerItem } from './SortableBannerItem';
 
 const ICON_OPTIONS = [
   { value: 'sparkles', label: 'Sparkles', icon: Sparkles },
@@ -244,18 +260,29 @@ export function BannerManager() {
     }
   };
 
-  const handleMoveUp = async (index: number) => {
-    if (index === 0) return;
-    const newOrder = [...banners];
-    [newOrder[index - 1], newOrder[index]] = [newOrder[index], newOrder[index - 1]];
-    await reorderBanners(newOrder.map(b => b.id));
-  };
+  // DnD Kit sensors
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
-  const handleMoveDown = async (index: number) => {
-    if (index === banners.length - 1) return;
-    const newOrder = [...banners];
-    [newOrder[index], newOrder[index + 1]] = [newOrder[index + 1], newOrder[index]];
-    await reorderBanners(newOrder.map(b => b.id));
+  const handleDragEnd = async (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      const oldIndex = banners.findIndex((b) => b.id === active.id);
+      const newIndex = banners.findIndex((b) => b.id === over.id);
+      
+      const newOrder = arrayMove(banners, oldIndex, newIndex);
+      await reorderBanners(newOrder.map(b => b.id));
+      toast({ title: 'Reordered', description: 'Banner order updated successfully' });
+    }
   };
 
   if (isLoading) {
@@ -311,124 +338,43 @@ export function BannerManager() {
         </div>
       </div>
 
-      {/* Banner List */}
-      <div className="space-y-3">
-        {banners.length === 0 ? (
-          <div className="text-center py-12 brutalist-card">
-            <ImageIcon className="h-12 w-12 text-gray-400 dark:text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-500 dark:text-gray-400">No banners yet. Create your first banner!</p>
-          </div>
-        ) : (
-          banners.map((banner, index) => (
-            <div 
-              key={banner.id} 
-              className={`brutalist-card p-4 ${banner.is_active ? 'border-green-500' : 'border-gray-300 opacity-60'}`}
-            >
-              <div className="flex items-start gap-4">
-                {/* Drag Handle & Order Controls */}
-                <div className="flex flex-col items-center gap-1">
-                  <GripVertical className="h-5 w-5 text-gray-400 dark:text-gray-500 cursor-grab" />
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    onClick={() => handleMoveUp(index)}
-                    disabled={index === 0}
-                    className="h-6 w-6 p-0"
-                  >
-                    <ChevronUp className="h-4 w-4" />
-                  </Button>
-                  <span className="text-xs font-bold text-gray-500 dark:text-gray-400">{index + 1}</span>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    onClick={() => handleMoveDown(index)}
-                    disabled={index === banners.length - 1}
-                    className="h-6 w-6 p-0"
-                  >
-                    <ChevronDown className="h-4 w-4" />
-                  </Button>
-                </div>
-
-                {/* Preview */}
-                <div className={`w-24 h-16 rounded-lg bg-gradient-to-br ${banner.gradient} flex items-center justify-center text-white shadow-lg flex-shrink-0 relative overflow-hidden`}>
-                  {banner.image_url && (
-                    <img 
-                      src={banner.image_url} 
-                      alt="" 
-                      className="absolute inset-0 w-full h-full object-cover"
-                    />
-                  )}
-                  <div className={`relative z-10 ${banner.image_url ? 'bg-black/30 p-1 rounded' : ''}`}>
-                    {getIconComponent(banner.icon_type)}
-                  </div>
-                </div>
-
-                {/* Content */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <h3 className="font-bold text-gray-900 dark:text-white truncate">{banner.title}</h3>
-                    {banner.is_active ? (
-                      <Badge className="bg-green-100 text-green-800 text-xs">Active</Badge>
-                    ) : (
-                      <Badge variant="secondary" className="text-xs">Inactive</Badge>
-                    )}
-                    {(banner.start_date || banner.end_date) && (
-                      <Badge variant="outline" className="text-xs">
-                        <Calendar className="h-3 w-3 mr-1" />
-                        Scheduled
-                      </Badge>
-                    )}
-                  </div>
-                  {banner.subtitle && (
-                    <p className="text-sm text-gray-600 dark:text-gray-400">{banner.subtitle}</p>
-                  )}
-                  {banner.description && (
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 line-clamp-1">{banner.description}</p>
-                  )}
-                  <div className="flex items-center gap-3 mt-2 text-xs text-gray-500 dark:text-gray-400">
-                    <span className="flex items-center gap-1">
-                      <Link className="h-3 w-3" />
-                      {banner.button_link}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <ExternalLink className="h-3 w-3" />
-                      {banner.button_text}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Actions */}
-                <div className="flex items-center gap-2 flex-shrink-0">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleToggleStatus(banner.id, banner.is_active)}
-                    className={banner.is_active ? 'text-green-600' : 'text-gray-400 dark:text-gray-500'}
-                  >
-                    {banner.is_active ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => openEditDialog(banner)}
-                    className="text-blue-600"
-                  >
-                    <Pencil className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleDelete(banner.id)}
-                    className="text-red-600"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
+      {/* Banner List with Drag & Drop */}
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+      >
+        <SortableContext
+          items={banners.map(b => b.id)}
+          strategy={verticalListSortingStrategy}
+        >
+          <div className="space-y-3">
+            {banners.length === 0 ? (
+              <div className="text-center py-12 brutalist-card">
+                <ImageIcon className="h-12 w-12 text-gray-400 dark:text-gray-600 mx-auto mb-4" />
+                <p className="text-gray-500 dark:text-gray-400">No banners yet. Create your first banner!</p>
               </div>
-            </div>
-          ))
-        )}
-      </div>
+            ) : (
+              <>
+                <p className="text-xs text-muted-foreground flex items-center gap-2">
+                  <GripVertical className="h-4 w-4" />
+                  Drag and drop to reorder banners
+                </p>
+                {banners.map((banner, index) => (
+                  <SortableBannerItem
+                    key={banner.id}
+                    banner={banner}
+                    index={index}
+                    onEdit={openEditDialog}
+                    onDelete={handleDelete}
+                    onToggleStatus={handleToggleStatus}
+                  />
+                ))}
+              </>
+            )}
+          </div>
+        </SortableContext>
+      </DndContext>
 
       {/* Create/Edit Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
