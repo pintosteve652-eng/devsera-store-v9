@@ -141,7 +141,7 @@ export function BundleOffersPage() {
                     {/* CTA Button */}
                     <Button 
                       className="w-full rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold shadow-lg shadow-purple-500/25"
-                      onClick={() => navigate(`/checkout`, { 
+                      onClick={() => navigate('/bundle-checkout', { 
                         state: { 
                           bundle: bundle,
                           isBundle: true
