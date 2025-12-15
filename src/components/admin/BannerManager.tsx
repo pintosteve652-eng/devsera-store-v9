@@ -5,13 +5,16 @@ import {
   Image as ImageIcon, Link, Calendar, ChevronUp, ChevronDown,
   ExternalLink, Palette, Upload, X, AlignLeft, AlignCenter, AlignRight,
   Layers, Type, Megaphone, Tag, Percent, ShoppingBag, Award, Bell,
-  Target, TrendingUp, Flame, Coffee, Music, Gamepad2, Tv, Camera
+  Target, TrendingUp, Flame, Coffee, Music, Gamepad2, Tv, Camera,
+  AlignStartVertical, AlignCenterVertical, AlignEndVertical
 } from 'lucide-react';
 import {
   DndContext,
   closestCenter,
   KeyboardSensor,
   PointerSensor,
+  MouseSensor,
+  TouchSensor,
   useSensor,
   useSensors,
   DragEndEvent,
@@ -22,6 +25,7 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
+import { restrictToVerticalAxis, restrictToParentElement } from '@dnd-kit/modifiers';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -110,7 +114,8 @@ export function BannerManager() {
     is_active: true,
     start_date: '',
     end_date: '',
-    text_align: 'center' as 'left' | 'center' | 'right',
+    text_align_h: 'center' as 'left' | 'center' | 'right',
+    text_align_v: 'center' as 'top' | 'center' | 'bottom',
     overlay_opacity: 50,
     show_icon: true,
   });
@@ -131,7 +136,8 @@ export function BannerManager() {
       is_active: true,
       start_date: '',
       end_date: '',
-      text_align: 'center',
+      text_align_h: 'center',
+      text_align_v: 'center',
       overlay_opacity: 50,
       show_icon: true,
     });
@@ -203,7 +209,8 @@ export function BannerManager() {
       is_active: banner.is_active,
       start_date: banner.start_date ? banner.start_date.split('T')[0] : '',
       end_date: banner.end_date ? banner.end_date.split('T')[0] : '',
-      text_align: 'center',
+      text_align_h: 'center',
+      text_align_v: 'center',
       overlay_opacity: 50,
       show_icon: true,
     });
@@ -260,11 +267,17 @@ export function BannerManager() {
     }
   };
 
-  // DnD Kit sensors
+  // DnD Kit sensors - using Mouse and Touch for better compatibility
   const sensors = useSensors(
-    useSensor(PointerSensor, {
+    useSensor(MouseSensor, {
       activationConstraint: {
-        distance: 8,
+        distance: 5,
+      },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 250,
+        tolerance: 5,
       },
     }),
     useSensor(KeyboardSensor, {
@@ -343,6 +356,7 @@ export function BannerManager() {
         sensors={sensors}
         collisionDetection={closestCenter}
         onDragEnd={handleDragEnd}
+        modifiers={[restrictToVerticalAxis]}
       >
         <SortableContext
           items={banners.map(b => b.id)}
@@ -427,13 +441,16 @@ export function BannerManager() {
                 )}
                 
                 {/* Content */}
-                <div className={`relative z-10 p-6 text-white h-full flex flex-col justify-center ${
-                  formData.text_align === 'left' ? 'items-start text-left' : 
-                  formData.text_align === 'right' ? 'items-end text-right' : 'items-center text-center'
+                <div className={`relative z-10 p-6 text-white h-full flex flex-col ${
+                  formData.text_align_v === 'top' ? 'justify-start' : 
+                  formData.text_align_v === 'bottom' ? 'justify-end' : 'justify-center'
+                } ${
+                  formData.text_align_h === 'left' ? 'items-start text-left' : 
+                  formData.text_align_h === 'right' ? 'items-end text-right' : 'items-center text-center'
                 }`}>
                   <div className={`flex items-center gap-3 mb-2 ${
-                    formData.text_align === 'left' ? 'flex-row' :
-                    formData.text_align === 'right' ? 'flex-row-reverse' : 'flex-row'
+                    formData.text_align_h === 'left' ? 'flex-row' :
+                    formData.text_align_h === 'right' ? 'flex-row-reverse' : 'flex-row'
                   }`}>
                     {formData.show_icon && getIconComponent(formData.icon_type)}
                     <div>
@@ -662,7 +679,7 @@ export function BannerManager() {
               <div className="space-y-3">
                 <Label className="flex items-center gap-2">
                   <AlignCenter className="h-4 w-4" />
-                  Text Alignment
+                  Horizontal Alignment
                 </Label>
                 <div className="flex gap-2">
                   {[
@@ -675,8 +692,37 @@ export function BannerManager() {
                       <Button
                         key={align.value}
                         type="button"
-                        variant={formData.text_align === align.value ? 'default' : 'outline'}
-                        onClick={() => setFormData({ ...formData, text_align: align.value as 'left' | 'center' | 'right' })}
+                        variant={formData.text_align_h === align.value ? 'default' : 'outline'}
+                        onClick={() => setFormData({ ...formData, text_align_h: align.value as 'left' | 'center' | 'right' })}
+                        className="flex-1"
+                      >
+                        <AlignIcon className="h-4 w-4 mr-2" />
+                        {align.label}
+                      </Button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Vertical Alignment */}
+              <div className="space-y-3">
+                <Label className="flex items-center gap-2">
+                  <AlignCenterVertical className="h-4 w-4" />
+                  Vertical Alignment
+                </Label>
+                <div className="flex gap-2">
+                  {[
+                    { value: 'top', icon: AlignStartVertical, label: 'Top' },
+                    { value: 'center', icon: AlignCenterVertical, label: 'Middle' },
+                    { value: 'bottom', icon: AlignEndVertical, label: 'Bottom' },
+                  ].map((align) => {
+                    const AlignIcon = align.icon;
+                    return (
+                      <Button
+                        key={align.value}
+                        type="button"
+                        variant={formData.text_align_v === align.value ? 'default' : 'outline'}
+                        onClick={() => setFormData({ ...formData, text_align_v: align.value as 'top' | 'center' | 'bottom' })}
                         className="flex-1"
                       >
                         <AlignIcon className="h-4 w-4 mr-2" />
