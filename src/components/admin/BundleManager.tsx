@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useAdminBundles } from '@/hooks/useBundles';
 import { useProducts } from '@/hooks/useProducts';
 import { Button } from '@/components/ui/button';
@@ -11,6 +11,7 @@ import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/components/ui/use-toast';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Checkbox } from '@/components/ui/checkbox';
+import { supabase } from '@/integrations/supabase/client';
 import { 
   Package, 
   Plus, 
@@ -18,7 +19,9 @@ import {
   Edit, 
   RefreshCw,
   Percent,
-  Calendar
+  Calendar,
+  Upload,
+  Image as ImageIcon
 } from 'lucide-react';
 
 export function BundleManager() {
@@ -27,6 +30,8 @@ export function BundleManager() {
   const { products } = useProducts();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingBundle, setEditingBundle] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -233,13 +238,91 @@ export function BundleManager() {
                       />
                     </div>
                     <div className="sm:col-span-2">
-                      <Label className="text-xs sm:text-sm">Image URL</Label>
-                      <Input
-                        value={formData.imageUrl}
-                        onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
-                        placeholder="https://example.com/bundle-image.jpg"
-                        className="mt-1 h-9 sm:h-10 text-sm"
-                      />
+                      <Label className="text-xs sm:text-sm">Bundle Image</Label>
+                      <div className="mt-1 space-y-2">
+                        <input
+                          type="file"
+                          ref={fileInputRef}
+                          accept="image/*"
+                          className="hidden"
+                          onChange={async (e) => {
+                            const file = e.target.files?.[0];
+                            if (!file) return;
+                            
+                            setIsUploading(true);
+                            try {
+                              const fileExt = file.name.split('.').pop();
+                              const fileName = `bundle-${Date.now()}.${fileExt}`;
+                              const filePath = `bundles/${fileName}`;
+                              
+                              const { error: uploadError } = await supabase.storage
+                                .from('product-images')
+                                .upload(filePath, file);
+                                
+                              if (uploadError) throw uploadError;
+                              
+                              const { data: { publicUrl } } = supabase.storage
+                                .from('product-images')
+                                .getPublicUrl(filePath);
+                                
+                              setFormData({ ...formData, imageUrl: publicUrl });
+                              toast({ title: 'Image uploaded successfully' });
+                            } catch (error) {
+                              toast({
+                                title: 'Upload failed',
+                                description: error instanceof Error ? error.message : 'Failed to upload image',
+                                variant: 'destructive',
+                              });
+                            } finally {
+                              setIsUploading(false);
+                            }
+                          }}
+                        />
+                        <div className="flex gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => fileInputRef.current?.click()}
+                            disabled={isUploading}
+                            className="h-9 sm:h-10 text-sm"
+                          >
+                            {isUploading ? (
+                              <>
+                                <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2" />
+                                Uploading...
+                              </>
+                            ) : (
+                              <>
+                                <Upload className="h-4 w-4 mr-2" />
+                                Upload Image
+                              </>
+                            )}
+                          </Button>
+                          <Input
+                            value={formData.imageUrl}
+                            onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
+                            placeholder="Or paste image URL"
+                            className="flex-1 h-9 sm:h-10 text-sm"
+                          />
+                        </div>
+                        {formData.imageUrl && (
+                          <div className="relative w-24 h-24 border rounded-lg overflow-hidden">
+                            <img
+                              src={formData.imageUrl}
+                              alt="Bundle preview"
+                              className="w-full h-full object-cover"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => setFormData({ ...formData, imageUrl: '' })}
+                              className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                            >
+                              <Trash2 className="h-3 w-3" />
+                            </button>
+                          </div>
+                        )}
+                      </div>
                     </div>
                     <div className="sm:col-span-2">
                       <Label className="text-xs sm:text-sm">Valid Until (Optional)</Label>
