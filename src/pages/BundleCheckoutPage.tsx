@@ -166,13 +166,13 @@ export function BundleCheckoutPage() {
         .from('payment-screenshots')
         .getPublicUrl(fileName);
 
-      // Update all orders with the screenshot
+      // Update all orders with the screenshot and set status to SUBMITTED
       for (const orderId of orderIds) {
         await supabase
           .from('orders')
           .update({
             payment_screenshot: publicUrl,
-            status: 'PAYMENT_PENDING',
+            status: 'SUBMITTED',
           })
           .eq('id', orderId);
       }
