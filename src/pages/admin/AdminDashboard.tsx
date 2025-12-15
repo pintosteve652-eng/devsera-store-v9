@@ -6,7 +6,7 @@ import { useAdminBundles } from '@/hooks/useBundles';
 import { usePremium } from '@/hooks/usePremium';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { DollarSign, ShoppingBag, Clock, CheckCircle2, XCircle, Users, MessageSquare, Package, Ticket, TrendingUp, Activity, BarChart3, ArrowUpRight, ArrowDownRight, Gift, Flame, Crown, Shield, Image as ImageIcon, Database, Sparkles } from 'lucide-react';
+import { DollarSign, ShoppingBag, Clock, CheckCircle2, XCircle, Users, MessageSquare, Package, Ticket, TrendingUp, Activity, BarChart3, ArrowUpRight, ArrowDownRight, Gift, Flame, Crown, Shield, Image as ImageIcon, Database, Sparkles, Mail } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { OrderVerificationPanel } from '@/components/admin/OrderVerificationPanel';
 import { SettingsPanel } from '@/components/admin/SettingsPanel';
@@ -22,6 +22,7 @@ import { StockUsageManager } from '@/components/admin/StockUsageManager';
 import PremiumManager from '@/components/admin/PremiumManager';
 import PremiumContentManager from '@/components/admin/PremiumContentManager';
 import AdminManager from '@/components/admin/AdminManager';
+import ContactRequestManager from '@/components/admin/ContactRequestManager';
 import { mockOrders, mockProducts } from '@/data/mockData';
 import { useCurrentAdminPermissions } from '@/hooks/useAdminManagement';
 import { isSupabaseConfigured, supabase } from '@/lib/supabase';
@@ -429,6 +430,15 @@ export function AdminDashboard() {
                 <span>Admins</span>
               </TabsTrigger>
             )}
+            {(isSuperAdmin || hasPermission('can_view_tickets')) && (
+              <TabsTrigger
+                value="contacts"
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-cyan-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-blue-500/30 font-semibold rounded-xl text-sm whitespace-nowrap px-4 py-2.5 transition-all duration-200 flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-700/50"
+              >
+                <Mail className="h-4 w-4" />
+                <span>Contacts</span>
+              </TabsTrigger>
+            )}
           </TabsList>
           </div>
 
@@ -494,6 +504,10 @@ export function AdminDashboard() {
 
           <TabsContent value="admins" className="m-0">
             <AdminManager />
+          </TabsContent>
+
+          <TabsContent value="contacts" className="m-0 p-4 sm:p-6">
+            <ContactRequestManager />
           </TabsContent>
           </div>
         </Tabs>
