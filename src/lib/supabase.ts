@@ -1,16 +1,13 @@
 import { createClient } from '@supabase/supabase-js';
 import { Database } from '@/types/supabase';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+// Lovable does not support runtime VITE_* env vars in the browser.
+// Use the project's Supabase URL + anon key directly.
+const supabaseUrl = 'https://cechkvznlmzelmhpftcl.supabase.co';
+const supabaseAnonKey =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNlY2hrdnpubG16ZWxtaHBmdGNsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU3ODc3NDEsImV4cCI6MjA4MTM2Mzc0MX0.0mM7CkfH22Mn8uiqU2WhvRbDyt1XCOQfkbN486niEAY';
 
-// Create a dummy client if env vars are missing (for development)
-const dummyUrl = 'https://placeholder.supabase.co';
-const dummyKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsYWNlaG9sZGVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NDUxOTI4MDAsImV4cCI6MTk2MDc2ODgwMH0.placeholder';
+export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey);
 
-export const supabase = createClient<Database>(
-  supabaseUrl || dummyUrl,
-  supabaseAnonKey || dummyKey
-);
+export const isSupabaseConfigured = true;
 
-export const isSupabaseConfigured = !!(supabaseUrl && supabaseAnonKey);
