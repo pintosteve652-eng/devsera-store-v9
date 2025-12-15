@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { 
   Plus, Pencil, Trash2, Eye, EyeOff, GripVertical, RefreshCw, 
   Sparkles, Gift, Clock, Shield, Zap, Star, Heart, Crown, 
   Image as ImageIcon, Link, Calendar, ChevronUp, ChevronDown,
-  ExternalLink, Palette
+  ExternalLink, Palette, Upload, X, AlignLeft, AlignCenter, AlignRight,
+  Layers, Type, Megaphone, Tag, Percent, ShoppingBag, Award, Bell,
+  Target, TrendingUp, Flame, Coffee, Music, Gamepad2, Tv, Camera
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -13,8 +15,11 @@ import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Slider } from '@/components/ui/slider';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/components/ui/use-toast';
 import { useAdminBannerPosts, BannerPost } from '@/hooks/useBannerPosts';
+import { supabase } from '@/lib/supabase';
 
 const ICON_OPTIONS = [
   { value: 'sparkles', label: 'Sparkles', icon: Sparkles },
@@ -25,10 +30,24 @@ const ICON_OPTIONS = [
   { value: 'star', label: 'Star', icon: Star },
   { value: 'heart', label: 'Heart', icon: Heart },
   { value: 'crown', label: 'Crown', icon: Crown },
+  { value: 'megaphone', label: 'Megaphone', icon: Megaphone },
+  { value: 'tag', label: 'Tag', icon: Tag },
+  { value: 'percent', label: 'Percent', icon: Percent },
+  { value: 'shopping-bag', label: 'Shopping Bag', icon: ShoppingBag },
+  { value: 'award', label: 'Award', icon: Award },
+  { value: 'bell', label: 'Bell', icon: Bell },
+  { value: 'target', label: 'Target', icon: Target },
+  { value: 'trending-up', label: 'Trending', icon: TrendingUp },
+  { value: 'flame', label: 'Flame', icon: Flame },
+  { value: 'coffee', label: 'Coffee', icon: Coffee },
+  { value: 'music', label: 'Music', icon: Music },
+  { value: 'gamepad', label: 'Gaming', icon: Gamepad2 },
+  { value: 'tv', label: 'TV', icon: Tv },
+  { value: 'camera', label: 'Camera', icon: Camera },
 ];
 
 const GRADIENT_OPTIONS = [
-  { value: 'from-teal-600 via-teal-700 to-emerald-800', label: 'Teal', preview: 'bg-gradient-to-r from-teal-600 via-teal-700 to-emerald-800' },
+  { value: 'from-teal-600 via-teal-700 to-emerald-800', label: 'Teal Emerald', preview: 'bg-gradient-to-r from-teal-600 via-teal-700 to-emerald-800' },
   { value: 'from-purple-600 via-pink-600 to-purple-800', label: 'Purple Pink', preview: 'bg-gradient-to-r from-purple-600 via-pink-600 to-purple-800' },
   { value: 'from-amber-500 via-orange-500 to-red-600', label: 'Amber Orange', preview: 'bg-gradient-to-r from-amber-500 via-orange-500 to-red-600' },
   { value: 'from-blue-600 via-indigo-600 to-purple-700', label: 'Blue Indigo', preview: 'bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-700' },
@@ -36,6 +55,14 @@ const GRADIENT_OPTIONS = [
   { value: 'from-rose-500 via-pink-500 to-fuchsia-600', label: 'Rose Pink', preview: 'bg-gradient-to-r from-rose-500 via-pink-500 to-fuchsia-600' },
   { value: 'from-cyan-500 via-blue-500 to-indigo-600', label: 'Cyan Blue', preview: 'bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-600' },
   { value: 'from-yellow-500 via-amber-500 to-orange-600', label: 'Yellow Amber', preview: 'bg-gradient-to-r from-yellow-500 via-amber-500 to-orange-600' },
+  { value: 'from-slate-700 via-slate-800 to-slate-900', label: 'Slate Dark', preview: 'bg-gradient-to-r from-slate-700 via-slate-800 to-slate-900' },
+  { value: 'from-red-600 via-rose-600 to-pink-700', label: 'Red Rose', preview: 'bg-gradient-to-r from-red-600 via-rose-600 to-pink-700' },
+  { value: 'from-violet-600 via-purple-600 to-indigo-700', label: 'Violet Purple', preview: 'bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-700' },
+  { value: 'from-lime-500 via-green-500 to-emerald-600', label: 'Lime Green', preview: 'bg-gradient-to-r from-lime-500 via-green-500 to-emerald-600' },
+  { value: 'from-sky-500 via-cyan-500 to-teal-600', label: 'Sky Cyan', preview: 'bg-gradient-to-r from-sky-500 via-cyan-500 to-teal-600' },
+  { value: 'from-fuchsia-600 via-pink-600 to-rose-700', label: 'Fuchsia Pink', preview: 'bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-700' },
+  { value: 'from-gray-800 via-gray-900 to-black', label: 'Dark Black', preview: 'bg-gradient-to-r from-gray-800 via-gray-900 to-black' },
+  { value: 'from-orange-600 via-red-600 to-rose-700', label: 'Orange Fire', preview: 'bg-gradient-to-r from-orange-600 via-red-600 to-rose-700' },
 ];
 
 const getIconComponent = (iconType: string) => {
@@ -67,7 +94,13 @@ export function BannerManager() {
     is_active: true,
     start_date: '',
     end_date: '',
+    text_align: 'center' as 'left' | 'center' | 'right',
+    overlay_opacity: 50,
+    show_icon: true,
   });
+  
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const resetForm = () => {
     setFormData({
@@ -82,8 +115,57 @@ export function BannerManager() {
       is_active: true,
       start_date: '',
       end_date: '',
+      text_align: 'center',
+      overlay_opacity: 50,
+      show_icon: true,
     });
     setEditingBanner(null);
+  };
+  
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast({ title: 'Error', description: 'Please select an image file', variant: 'destructive' });
+      return;
+    }
+    
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast({ title: 'Error', description: 'Image must be less than 5MB', variant: 'destructive' });
+      return;
+    }
+    
+    setIsUploading(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `banner_${Date.now()}.${fileExt}`;
+      const filePath = `banners/${fileName}`;
+      
+      const { error: uploadError } = await supabase.storage
+        .from('product-images')
+        .upload(filePath, file);
+      
+      if (uploadError) throw uploadError;
+      
+      const { data: { publicUrl } } = supabase.storage
+        .from('product-images')
+        .getPublicUrl(filePath);
+      
+      setFormData(prev => ({ ...prev, image_url: publicUrl }));
+      toast({ title: 'Success', description: 'Image uploaded successfully' });
+    } catch (error) {
+      console.error('Upload error:', error);
+      toast({ title: 'Error', description: 'Failed to upload image', variant: 'destructive' });
+    } finally {
+      setIsUploading(false);
+    }
+  };
+  
+  const removeImage = () => {
+    setFormData(prev => ({ ...prev, image_url: '' }));
   };
 
   const openCreateDialog = () => {
@@ -105,6 +187,9 @@ export function BannerManager() {
       is_active: banner.is_active,
       start_date: banner.start_date ? banner.start_date.split('T')[0] : '',
       end_date: banner.end_date ? banner.end_date.split('T')[0] : '',
+      text_align: 'center',
+      overlay_opacity: 50,
+      show_icon: true,
     });
     setIsDialogOpen(true);
   };
@@ -265,8 +350,17 @@ export function BannerManager() {
                 </div>
 
                 {/* Preview */}
-                <div className={`w-24 h-16 rounded-lg bg-gradient-to-br ${banner.gradient} flex items-center justify-center text-white shadow-lg flex-shrink-0`}>
-                  {getIconComponent(banner.icon_type)}
+                <div className={`w-24 h-16 rounded-lg bg-gradient-to-br ${banner.gradient} flex items-center justify-center text-white shadow-lg flex-shrink-0 relative overflow-hidden`}>
+                  {banner.image_url && (
+                    <img 
+                      src={banner.image_url} 
+                      alt="" 
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                  )}
+                  <div className={`relative z-10 ${banner.image_url ? 'bg-black/30 p-1 rounded' : ''}`}>
+                    {getIconComponent(banner.icon_type)}
+                  </div>
                 </div>
 
                 {/* Content */}
@@ -338,7 +432,7 @@ export function BannerManager() {
 
       {/* Create/Edit Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <ImageIcon className="h-5 w-5 text-teal-600" />
@@ -346,179 +440,361 @@ export function BannerManager() {
             </DialogTitle>
           </DialogHeader>
 
-          <div className="space-y-6 py-4">
-            {/* Preview */}
-            <div className={`rounded-xl p-6 bg-gradient-to-br ${formData.gradient} text-white shadow-lg`}>
-              <div className="flex items-center gap-3 mb-2">
-                {getIconComponent(formData.icon_type)}
-                <div>
-                  <h3 className="font-bold text-lg">{formData.title || 'Banner Title'}</h3>
-                  {formData.subtitle && <p className="text-sm opacity-90">{formData.subtitle}</p>}
+          <Tabs defaultValue="content" className="w-full">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="content" className="flex items-center gap-2">
+                <Type className="h-4 w-4" />
+                Content
+              </TabsTrigger>
+              <TabsTrigger value="design" className="flex items-center gap-2">
+                <Palette className="h-4 w-4" />
+                Design
+              </TabsTrigger>
+              <TabsTrigger value="schedule" className="flex items-center gap-2">
+                <Calendar className="h-4 w-4" />
+                Schedule
+              </TabsTrigger>
+            </TabsList>
+
+            {/* Live Preview */}
+            <div className="my-4">
+              <Label className="text-sm text-muted-foreground mb-2 block">Live Preview</Label>
+              <div 
+                className={`relative rounded-xl overflow-hidden shadow-lg`}
+                style={{ minHeight: '180px' }}
+              >
+                {/* Background Image or Gradient */}
+                {formData.image_url ? (
+                  <>
+                    <img 
+                      src={formData.image_url} 
+                      alt="Banner background" 
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                    <div 
+                      className={`absolute inset-0 bg-gradient-to-br ${formData.gradient}`}
+                      style={{ opacity: formData.overlay_opacity / 100 }}
+                    />
+                  </>
+                ) : (
+                  <div className={`absolute inset-0 bg-gradient-to-br ${formData.gradient}`} />
+                )}
+                
+                {/* Content */}
+                <div className={`relative z-10 p-6 text-white h-full flex flex-col justify-center ${
+                  formData.text_align === 'left' ? 'items-start text-left' : 
+                  formData.text_align === 'right' ? 'items-end text-right' : 'items-center text-center'
+                }`}>
+                  <div className={`flex items-center gap-3 mb-2 ${
+                    formData.text_align === 'left' ? 'flex-row' :
+                    formData.text_align === 'right' ? 'flex-row-reverse' : 'flex-row'
+                  }`}>
+                    {formData.show_icon && getIconComponent(formData.icon_type)}
+                    <div>
+                      <h3 className="font-bold text-xl">{formData.title || 'Banner Title'}</h3>
+                      {formData.subtitle && (
+                        <p className="text-sm opacity-90 text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-yellow-200 font-semibold">
+                          {formData.subtitle}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  {formData.description && (
+                    <p className="text-sm opacity-90 mb-4 max-w-md">{formData.description}</p>
+                  )}
+                  <Button size="sm" className="bg-white text-gray-900 hover:bg-gray-100">
+                    {formData.button_text || 'Shop Now'}
+                  </Button>
                 </div>
               </div>
-              {formData.description && (
-                <p className="text-sm opacity-80 mb-3">{formData.description}</p>
+            </div>
+
+            <TabsContent value="content" className="space-y-4 mt-4">
+              {/* Title & Subtitle */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Title <span className="text-red-500">*</span></Label>
+                  <Input
+                    value={formData.title}
+                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                    placeholder="Premium Services"
+                    className="border-2"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Subtitle</Label>
+                  <Input
+                    value={formData.subtitle}
+                    onChange={(e) => setFormData({ ...formData, subtitle: e.target.value })}
+                    placeholder="Unbeatable Prices"
+                    className="border-2"
+                  />
+                </div>
+              </div>
+
+              {/* Description */}
+              <div className="space-y-2">
+                <Label>Description</Label>
+                <Textarea
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  placeholder="Get instant access to premium services at amazing prices!"
+                  className="border-2"
+                  rows={3}
+                />
+              </div>
+
+              {/* Button Settings */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label className="flex items-center gap-2">
+                    <ExternalLink className="h-4 w-4" />
+                    Button Text
+                  </Label>
+                  <Input
+                    value={formData.button_text}
+                    onChange={(e) => setFormData({ ...formData, button_text: e.target.value })}
+                    placeholder="Shop Now"
+                    className="border-2"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label className="flex items-center gap-2">
+                    <Link className="h-4 w-4" />
+                    Button Link
+                  </Label>
+                  <Input
+                    value={formData.button_link}
+                    onChange={(e) => setFormData({ ...formData, button_link: e.target.value })}
+                    placeholder="/"
+                    className="border-2"
+                  />
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="design" className="space-y-4 mt-4">
+              {/* Image Upload Section */}
+              <div className="space-y-3">
+                <Label className="flex items-center gap-2">
+                  <ImageIcon className="h-4 w-4" />
+                  Background Image
+                </Label>
+                
+                <div className="flex gap-3">
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleImageUpload}
+                    accept="image/*"
+                    className="hidden"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={isUploading}
+                    className="border-2 border-dashed"
+                  >
+                    {isUploading ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-teal-500 border-t-transparent rounded-full animate-spin mr-2" />
+                        Uploading...
+                      </>
+                    ) : (
+                      <>
+                        <Upload className="h-4 w-4 mr-2" />
+                        Upload Image
+                      </>
+                    )}
+                  </Button>
+                  <span className="text-xs text-muted-foreground self-center">or</span>
+                  <Input
+                    value={formData.image_url}
+                    onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
+                    placeholder="Paste image URL..."
+                    className="border-2 flex-1"
+                  />
+                </div>
+                
+                {formData.image_url && (
+                  <div className="relative w-32 h-20 rounded-lg overflow-hidden border-2 border-border">
+                    <img 
+                      src={formData.image_url} 
+                      alt="Preview" 
+                      className="w-full h-full object-cover"
+                    />
+                    <button
+                      onClick={removeImage}
+                      className="absolute top-1 right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-white hover:bg-red-600"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Overlay Opacity (only show when image is set) */}
+              {formData.image_url && (
+                <div className="space-y-3">
+                  <Label className="flex items-center gap-2">
+                    <Layers className="h-4 w-4" />
+                    Gradient Overlay Opacity: {formData.overlay_opacity}%
+                  </Label>
+                  <Slider
+                    value={[formData.overlay_opacity]}
+                    onValueChange={([value]) => setFormData({ ...formData, overlay_opacity: value })}
+                    max={100}
+                    min={0}
+                    step={5}
+                    className="w-full"
+                  />
+                </div>
               )}
-              <Button size="sm" className="bg-white/20 hover:bg-white/30 text-white">
-                {formData.button_text || 'Shop Now'}
-              </Button>
-            </div>
 
-            {/* Form Fields */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Title <span className="text-red-500">*</span></Label>
-                <Input
-                  value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  placeholder="Premium Services"
-                  className="border-2"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>Subtitle</Label>
-                <Input
-                  value={formData.subtitle}
-                  onChange={(e) => setFormData({ ...formData, subtitle: e.target.value })}
-                  placeholder="Unbeatable Prices"
-                  className="border-2"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label>Description</Label>
-              <Textarea
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                placeholder="Get instant access to premium services at amazing prices!"
-                className="border-2"
-                rows={2}
-              />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Button Text</Label>
-                <Input
-                  value={formData.button_text}
-                  onChange={(e) => setFormData({ ...formData, button_text: e.target.value })}
-                  placeholder="Shop Now"
-                  className="border-2"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>Button Link</Label>
-                <Input
-                  value={formData.button_link}
-                  onChange={(e) => setFormData({ ...formData, button_link: e.target.value })}
-                  placeholder="/"
-                  className="border-2"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
+              {/* Gradient Selection */}
+              <div className="space-y-3">
                 <Label className="flex items-center gap-2">
                   <Palette className="h-4 w-4" />
                   Gradient Color
                 </Label>
-                <Select
-                  value={formData.gradient}
-                  onValueChange={(value) => setFormData({ ...formData, gradient: value })}
-                >
-                  <SelectTrigger className="border-2">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {GRADIENT_OPTIONS.map((opt) => (
-                      <SelectItem key={opt.value} value={opt.value}>
-                        <div className="flex items-center gap-2">
-                          <div className={`w-6 h-4 rounded ${opt.preview}`} />
-                          {opt.label}
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <div className="grid grid-cols-4 gap-2">
+                  {GRADIENT_OPTIONS.map((opt) => (
+                    <button
+                      key={opt.value}
+                      onClick={() => setFormData({ ...formData, gradient: opt.value })}
+                      className={`h-12 rounded-lg ${opt.preview} transition-all ${
+                        formData.gradient === opt.value 
+                          ? 'ring-2 ring-white ring-offset-2 ring-offset-background scale-105' 
+                          : 'opacity-70 hover:opacity-100'
+                      }`}
+                      title={opt.label}
+                    />
+                  ))}
+                </div>
               </div>
-              <div className="space-y-2">
-                <Label>Icon</Label>
-                <Select
-                  value={formData.icon_type}
-                  onValueChange={(value) => setFormData({ ...formData, icon_type: value })}
-                >
-                  <SelectTrigger className="border-2">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
+
+              {/* Icon Selection */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <Label className="flex items-center gap-2">
+                    <Sparkles className="h-4 w-4" />
+                    Banner Icon
+                  </Label>
+                  <div className="flex items-center gap-2">
+                    <Label className="text-sm text-muted-foreground">Show Icon</Label>
+                    <Switch
+                      checked={formData.show_icon}
+                      onCheckedChange={(checked) => setFormData({ ...formData, show_icon: checked })}
+                    />
+                  </div>
+                </div>
+                {formData.show_icon && (
+                  <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-11 gap-2">
                     {ICON_OPTIONS.map((opt) => {
                       const IconComp = opt.icon;
                       return (
-                        <SelectItem key={opt.value} value={opt.value}>
-                          <div className="flex items-center gap-2">
-                            <IconComp className="h-4 w-4" />
-                            {opt.label}
-                          </div>
-                        </SelectItem>
+                        <button
+                          key={opt.value}
+                          onClick={() => setFormData({ ...formData, icon_type: opt.value })}
+                          className={`p-2 rounded-lg border-2 transition-all flex items-center justify-center ${
+                            formData.icon_type === opt.value 
+                              ? 'border-teal-500 bg-teal-500/10 text-teal-600' 
+                              : 'border-border hover:border-teal-300'
+                          }`}
+                          title={opt.label}
+                        >
+                          <IconComp className="h-5 w-5" />
+                        </button>
                       );
                     })}
-                  </SelectContent>
-                </Select>
+                  </div>
+                )}
               </div>
-            </div>
 
-            <div className="space-y-2">
-              <Label>Image URL (Optional)</Label>
-              <Input
-                value={formData.image_url}
-                onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                placeholder="https://images.unsplash.com/..."
-                className="border-2"
-              />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
+              {/* Text Alignment */}
+              <div className="space-y-3">
                 <Label className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4" />
-                  Start Date (Optional)
+                  <AlignCenter className="h-4 w-4" />
+                  Text Alignment
                 </Label>
-                <Input
-                  type="date"
-                  value={formData.start_date}
-                  onChange={(e) => setFormData({ ...formData, start_date: e.target.value })}
-                  className="border-2"
+                <div className="flex gap-2">
+                  {[
+                    { value: 'left', icon: AlignLeft, label: 'Left' },
+                    { value: 'center', icon: AlignCenter, label: 'Center' },
+                    { value: 'right', icon: AlignRight, label: 'Right' },
+                  ].map((align) => {
+                    const AlignIcon = align.icon;
+                    return (
+                      <Button
+                        key={align.value}
+                        type="button"
+                        variant={formData.text_align === align.value ? 'default' : 'outline'}
+                        onClick={() => setFormData({ ...formData, text_align: align.value as 'left' | 'center' | 'right' })}
+                        className="flex-1"
+                      >
+                        <AlignIcon className="h-4 w-4 mr-2" />
+                        {align.label}
+                      </Button>
+                    );
+                  })}
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="schedule" className="space-y-4 mt-4">
+              {/* Active Status */}
+              <div className="flex items-center justify-between p-4 bg-muted rounded-lg">
+                <div>
+                  <Label className="font-semibold">Active Status</Label>
+                  <p className="text-xs text-muted-foreground">Enable to show this banner on the front page</p>
+                </div>
+                <Switch
+                  checked={formData.is_active}
+                  onCheckedChange={(checked) => setFormData({ ...formData, is_active: checked })}
                 />
               </div>
-              <div className="space-y-2">
-                <Label className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4" />
-                  End Date (Optional)
-                </Label>
-                <Input
-                  type="date"
-                  value={formData.end_date}
-                  onChange={(e) => setFormData({ ...formData, end_date: e.target.value })}
-                  className="border-2"
-                />
-              </div>
-            </div>
 
-            <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-              <div>
-                <Label className="font-semibold">Active Status</Label>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Enable to show this banner on the front page</p>
+              {/* Date Range */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label className="flex items-center gap-2">
+                    <Calendar className="h-4 w-4" />
+                    Start Date (Optional)
+                  </Label>
+                  <Input
+                    type="datetime-local"
+                    value={formData.start_date}
+                    onChange={(e) => setFormData({ ...formData, start_date: e.target.value })}
+                    className="border-2"
+                  />
+                  <p className="text-xs text-muted-foreground">Banner will start showing from this date</p>
+                </div>
+                <div className="space-y-2">
+                  <Label className="flex items-center gap-2">
+                    <Calendar className="h-4 w-4" />
+                    End Date (Optional)
+                  </Label>
+                  <Input
+                    type="datetime-local"
+                    value={formData.end_date}
+                    onChange={(e) => setFormData({ ...formData, end_date: e.target.value })}
+                    className="border-2"
+                  />
+                  <p className="text-xs text-muted-foreground">Banner will stop showing after this date</p>
+                </div>
               </div>
-              <Switch
-                checked={formData.is_active}
-                onCheckedChange={(checked) => setFormData({ ...formData, is_active: checked })}
-              />
-            </div>
-          </div>
 
-          <DialogFooter>
+              <div className="p-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
+                <p className="text-sm text-amber-800 dark:text-amber-200">
+                  💡 <strong>Tip:</strong> Leave dates empty for the banner to always show when active. 
+                  Use scheduling for time-limited promotions or seasonal campaigns.
+                </p>
+              </div>
+            </TabsContent>
+          </Tabs>
+
+          <DialogFooter className="mt-6">
             <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
               Cancel
             </Button>
