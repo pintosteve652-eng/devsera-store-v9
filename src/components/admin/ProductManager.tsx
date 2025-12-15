@@ -1198,39 +1198,39 @@ export function ProductManager() {
 
       {/* Product Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-3xl w-[95vw] max-h-[90vh] overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-2xl shadow-2xl">
-          <DialogHeader className="border-b border-gray-200 dark:border-gray-700 pb-4">
-            <DialogTitle className="text-xl font-bold text-gray-900 dark:text-white">
+        <DialogContent className="max-w-3xl w-[95vw] max-h-[90vh] overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-2xl shadow-2xl p-3 sm:p-6">
+          <DialogHeader className="border-b border-gray-200 dark:border-gray-700 pb-3 sm:pb-4">
+            <DialogTitle className="text-base sm:text-xl font-bold text-gray-900 dark:text-white">
               {editingProduct?.id ? 'Edit Product' : 'Add New Product'}
             </DialogTitle>
           </DialogHeader>
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 mb-4 h-auto bg-gray-100 dark:bg-gray-700/50 rounded-xl p-1">
-              <TabsTrigger value="basic" className="text-xs sm:text-sm py-2 rounded-lg data-[state=active]:bg-white dark:data-[state=active]:bg-gray-800 data-[state=active]:shadow-sm">
-                <Package className="h-4 w-4 sm:mr-1" />
-                <span className="hidden sm:inline">Basic</span>
+            <TabsList className="grid w-full grid-cols-4 mb-3 sm:mb-4 h-auto bg-gray-100 dark:bg-gray-700/50 rounded-xl p-1">
+              <TabsTrigger value="basic" className="text-[10px] sm:text-sm py-2 sm:py-2.5 rounded-lg data-[state=active]:bg-white dark:data-[state=active]:bg-gray-800 data-[state=active]:shadow-sm flex flex-col sm:flex-row items-center gap-0.5 sm:gap-1 min-h-[44px] sm:min-h-0">
+                <Package className="h-4 w-4" />
+                <span className="leading-tight">Basic</span>
               </TabsTrigger>
-              <TabsTrigger value="variants" className="text-xs sm:text-sm py-2">
-                <Layers className="h-4 w-4 sm:mr-1" />
-                <span className="hidden sm:inline">Variants</span>
+              <TabsTrigger value="variants" className="text-[10px] sm:text-sm py-2 sm:py-2.5 rounded-lg data-[state=active]:bg-white dark:data-[state=active]:bg-gray-800 data-[state=active]:shadow-sm flex flex-col sm:flex-row items-center gap-0.5 sm:gap-1 min-h-[44px] sm:min-h-0">
+                <Layers className="h-4 w-4" />
+                <span className="leading-tight">Variants</span>
               </TabsTrigger>
-              <TabsTrigger value="delivery" className="text-xs sm:text-sm py-2">
-                <Zap className="h-4 w-4 sm:mr-1" />
-                <span className="hidden sm:inline">Delivery</span>
+              <TabsTrigger value="delivery" className="text-[10px] sm:text-sm py-2 sm:py-2.5 rounded-lg data-[state=active]:bg-white dark:data-[state=active]:bg-gray-800 data-[state=active]:shadow-sm flex flex-col sm:flex-row items-center gap-0.5 sm:gap-1 min-h-[44px] sm:min-h-0">
+                <Zap className="h-4 w-4" />
+                <span className="leading-tight">Delivery</span>
               </TabsTrigger>
-              <TabsTrigger value="schedule" className="text-xs sm:text-sm py-2">
-                <Calendar className="h-4 w-4 sm:mr-1" />
-                <span className="hidden sm:inline">Schedule</span>
+              <TabsTrigger value="schedule" className="text-[10px] sm:text-sm py-2 sm:py-2.5 rounded-lg data-[state=active]:bg-white dark:data-[state=active]:bg-gray-800 data-[state=active]:shadow-sm flex flex-col sm:flex-row items-center gap-0.5 sm:gap-1 min-h-[44px] sm:min-h-0">
+                <Calendar className="h-4 w-4" />
+                <span className="leading-tight">Schedule</span>
               </TabsTrigger>
             </TabsList>
 
             {/* Basic Info Tab */}
-            <TabsContent value="basic" className="space-y-6">
+            <TabsContent value="basic" className="space-y-4 sm:space-y-6">
               {/* Product Name & Description */}
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 <div>
-                  <Label htmlFor="name" className="font-medium text-gray-900 dark:text-white">
+                  <Label htmlFor="name" className="text-sm sm:text-base font-medium text-gray-900 dark:text-white">
                     Product Name <span className="text-red-500">*</span>
                   </Label>
                   <Input
@@ -1238,78 +1238,81 @@ export function ProductManager() {
                     value={editingProduct?.name || ''}
                     onChange={(e) => setEditingProduct({ ...editingProduct, name: e.target.value })}
                     placeholder="e.g., Netflix Premium"
-                    className="mt-1.5 border-2 border-gray-300 dark:border-gray-600 focus:border-[#0A7A7A] h-11"
+                    className="mt-1.5 border-2 border-gray-300 dark:border-gray-600 focus:border-[#0A7A7A] h-11 sm:h-11 text-base"
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="description" className="font-medium text-gray-900 dark:text-white">Description</Label>
+                  <Label htmlFor="description" className="text-sm sm:text-base font-medium text-gray-900 dark:text-white">Description</Label>
                   <Textarea
                     id="description"
                     value={editingProduct?.description || ''}
                     onChange={(e) => setEditingProduct({ ...editingProduct, description: e.target.value })}
                     placeholder="Brief description of the product"
-                    className="mt-1.5 border-2 border-gray-300 dark:border-gray-600 focus:border-[#0A7A7A]"
+                    className="mt-1.5 border-2 border-gray-300 dark:border-gray-600 focus:border-[#0A7A7A] text-base"
                     rows={2}
                   />
                 </div>
               </div>
 
               {/* Pricing Section */}
-              <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
-                <h4 className="font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+              <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-3 sm:p-4 border border-gray-200 dark:border-gray-700">
+                <h4 className="text-sm sm:text-base font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4 flex flex-wrap items-center gap-2">
                   <span className="text-lg">💵</span> Pricing
                   {editingProduct?.hasVariants && (
-                    <span className="text-xs font-normal text-amber-600 dark:text-amber-400 bg-amber-100 dark:bg-amber-900/30 px-2 py-0.5 rounded-full">
+                    <span className="text-[10px] sm:text-xs font-normal text-amber-600 dark:text-amber-400 bg-amber-100 dark:bg-amber-900/30 px-2 py-0.5 rounded-full">
                       Set per variant
                     </span>
                   )}
                 </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
                   <div>
-                    <Label htmlFor="originalPrice" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    <Label htmlFor="originalPrice" className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">
                       Original Price (₹)
                     </Label>
                     <Input
                       id="originalPrice"
                       type="number"
                       min="0"
+                      inputMode="numeric"
                       value={editingProduct?.originalPrice || ''}
                       onChange={(e) => setEditingProduct({ ...editingProduct, originalPrice: Number(e.target.value) })}
                       placeholder="999"
-                      className="mt-1.5 border-2 border-gray-300 dark:border-gray-600 focus:border-[#0A7A7A] h-11 bg-white dark:bg-gray-800"
+                      className="mt-1.5 border-2 border-gray-300 dark:border-gray-600 focus:border-[#0A7A7A] h-11 bg-white dark:bg-gray-800 text-base"
                       disabled={editingProduct?.hasVariants}
                     />
                   </div>
 
                   <div>
-                    <Label htmlFor="salePrice" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    <Label htmlFor="salePrice" className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">
                       Sale Price (₹) <span className="text-red-500">*</span>
                     </Label>
                     <Input
                       id="salePrice"
                       type="number"
                       min="1"
+                      inputMode="numeric"
                       value={editingProduct?.salePrice || ''}
                       onChange={(e) => setEditingProduct({ ...editingProduct, salePrice: Number(e.target.value) })}
                       placeholder="499"
-                      className="mt-1.5 border-2 border-gray-300 dark:border-gray-600 focus:border-[#0A7A7A] h-11 bg-white dark:bg-gray-800"
+                      className="mt-1.5 border-2 border-gray-300 dark:border-gray-600 focus:border-[#0A7A7A] h-11 bg-white dark:bg-gray-800 text-base"
                       disabled={editingProduct?.hasVariants}
                     />
                   </div>
 
                   <div>
-                    <Label htmlFor="costPrice" className="text-sm font-medium text-amber-700 dark:text-amber-400 flex items-center gap-1">
+                    <Label htmlFor="costPrice" className="text-xs sm:text-sm font-medium text-amber-700 dark:text-amber-400 flex items-center gap-1">
                       <span>💰</span> Vendor Price (₹)
                     </Label>
                     <Input
                       id="costPrice"
                       type="number"
                       min="0"
+                      inputMode="numeric"
                       value={editingProduct?.costPrice || ''}
                       onChange={(e) => setEditingProduct({ ...editingProduct, costPrice: Number(e.target.value) })}
                       placeholder="299"
-                      className="mt-1.5 border-2 border-amber-400 dark:border-amber-600 focus:border-amber-600 bg-amber-50 dark:bg-amber-900/20 h-11"
+                      className="mt-1.5 border-2 border-amber-400 dark:border-amber-600 focus:border-amber-600 bg-amber-50 dark:bg-amber-900/20 h-11 text-base"
                       disabled={editingProduct?.hasVariants}
                     />
                   </div>
@@ -1325,25 +1328,25 @@ export function ProductManager() {
               </div>
 
               {/* Duration & Category */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
                 <div>
-                  <Label htmlFor="duration" className="font-medium text-gray-900 dark:text-white">Duration</Label>
+                  <Label htmlFor="duration" className="text-sm sm:text-base font-medium text-gray-900 dark:text-white">Duration</Label>
                   <Select
                     value={editingProduct?.duration || '1 Month'}
                     onValueChange={(value) => setEditingProduct({ ...editingProduct, duration: value })}
                     disabled={editingProduct?.hasVariants}
                   >
-                    <SelectTrigger className="mt-1.5 border-2 border-gray-300 dark:border-gray-600 h-11">
+                    <SelectTrigger className="mt-1.5 border-2 border-gray-300 dark:border-gray-600 h-11 text-base">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="1 Week">1 Week</SelectItem>
-                      <SelectItem value="1 Month">1 Month</SelectItem>
-                      <SelectItem value="2 Months">2 Months</SelectItem>
-                      <SelectItem value="3 Months">3 Months</SelectItem>
-                      <SelectItem value="6 Months">6 Months</SelectItem>
-                      <SelectItem value="1 Year">1 Year</SelectItem>
-                      <SelectItem value="Lifetime">Lifetime</SelectItem>
+                      <SelectItem value="1 Week" className="min-h-[44px] flex items-center">1 Week</SelectItem>
+                      <SelectItem value="1 Month" className="min-h-[44px] flex items-center">1 Month</SelectItem>
+                      <SelectItem value="2 Months" className="min-h-[44px] flex items-center">2 Months</SelectItem>
+                      <SelectItem value="3 Months" className="min-h-[44px] flex items-center">3 Months</SelectItem>
+                      <SelectItem value="6 Months" className="min-h-[44px] flex items-center">6 Months</SelectItem>
+                      <SelectItem value="1 Year" className="min-h-[44px] flex items-center">1 Year</SelectItem>
+                      <SelectItem value="Lifetime" className="min-h-[44px] flex items-center">Lifetime</SelectItem>
                     </SelectContent>
                   </Select>
                   {editingProduct?.hasVariants && (
@@ -1352,23 +1355,23 @@ export function ProductManager() {
                 </div>
 
                 <div>
-                  <Label htmlFor="category" className="font-medium text-gray-900 dark:text-white">Category</Label>
+                  <Label htmlFor="category" className="text-sm sm:text-base font-medium text-gray-900 dark:text-white">Category</Label>
                   <Input
                     id="category"
                     value={editingProduct?.category || ''}
                     onChange={(e) => setEditingProduct({ ...editingProduct, category: e.target.value })}
                     placeholder="e.g., Entertainment"
-                    className="mt-1.5 border-2 border-gray-300 dark:border-gray-600 focus:border-[#0A7A7A] h-11"
+                    className="mt-1.5 border-2 border-gray-300 dark:border-gray-600 focus:border-[#0A7A7A] h-11 text-base"
                   />
                 </div>
               </div>
 
               {/* Product Image */}
-              <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
-                <h4 className="font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                  <ImageIcon className="h-5 w-5 text-[#0A7A7A]" /> Product Image
+              <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-3 sm:p-4 border border-gray-200 dark:border-gray-700">
+                <h4 className="text-sm sm:text-base font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4 flex items-center gap-2">
+                  <ImageIcon className="h-4 w-4 sm:h-5 sm:w-5 text-[#0A7A7A]" /> Product Image
                 </h4>
-                <div className="flex flex-col sm:flex-row gap-4">
+                <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
                   {editingProduct?.image && (
                     <div className="relative flex-shrink-0">
                       <img
@@ -1432,12 +1435,12 @@ export function ProductManager() {
               </div>
 
               {/* Product Features */}
-              <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
-                <div className="flex items-center justify-between mb-4">
-                  <h4 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-                    <ListChecks className="h-5 w-5 text-[#0A7A7A]" /> Product Features
+              <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-3 sm:p-4 border border-gray-200 dark:border-gray-700">
+                <div className="flex flex-wrap items-center justify-between gap-2 mb-3 sm:mb-4">
+                  <h4 className="text-sm sm:text-base font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                    <ListChecks className="h-4 w-4 sm:h-5 sm:w-5 text-[#0A7A7A]" /> Product Features
                   </h4>
-                  <span className="text-xs text-gray-500 dark:text-gray-400 bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded-full">
+                  <span className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded-full">
                     {featuresText.split('\n').filter(f => f.trim()).length} features
                   </span>
                 </div>
@@ -1486,8 +1489,8 @@ export function ProductManager() {
             </TabsContent>
 
             {/* Variants Tab */}
-            <TabsContent value="variants" className="space-y-6">
-              <div className="flex items-center justify-between p-4 bg-purple-50 dark:bg-purple-900/20 border-2 border-purple-200 dark:border-purple-700 rounded-xl">
+            <TabsContent value="variants" className="space-y-4 sm:space-y-6">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 bg-purple-50 dark:bg-purple-900/20 border-2 border-purple-200 dark:border-purple-700 rounded-xl">
                 <div className="flex items-center gap-3">
                   <Switch
                     checked={editingProduct?.hasVariants || false}
@@ -1497,10 +1500,11 @@ export function ProductManager() {
                         addVariant();
                       }
                     }}
+                    className="scale-110"
                   />
                   <div>
-                    <Label className="font-semibold text-gray-900 dark:text-white">Enable Product Variants</Label>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">Allow multiple duration/price options for this product</p>
+                    <Label className="text-sm sm:text-base font-semibold text-gray-900 dark:text-white">Enable Product Variants</Label>
+                    <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400">Allow multiple duration/price options</p>
                   </div>
                 </div>
                 {editingProduct?.hasVariants && (
@@ -1509,7 +1513,7 @@ export function ProductManager() {
                     variant="outline"
                     size="sm"
                     onClick={addVariant}
-                    className="border-2 border-purple-400 text-purple-600 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-900/30"
+                    className="border-2 border-purple-400 text-purple-600 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-900/30 min-h-[44px] w-full sm:w-auto"
                   >
                     <Plus className="h-4 w-4 mr-1" />
                     Add Variant
@@ -1522,18 +1526,18 @@ export function ProductManager() {
                   {variants.map((variant, index) => (
                     <div key={index} className="bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
                       {/* Variant Header */}
-                      <div className="flex items-center justify-between px-4 py-3 bg-gray-50 dark:bg-gray-800/50 border-b border-gray-200 dark:border-gray-700">
-                        <span className="font-semibold text-sm text-gray-900 dark:text-white flex items-center gap-2">
+                      <div className="flex flex-wrap items-center justify-between gap-2 px-3 sm:px-4 py-2 sm:py-3 bg-gray-50 dark:bg-gray-800/50 border-b border-gray-200 dark:border-gray-700">
+                        <span className="text-xs sm:text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
                           <Layers className="h-4 w-4 text-purple-500" />
                           Variant {index + 1}
                         </span>
-                        <div className="flex items-center gap-3">
-                          <label className="flex items-center gap-2 text-sm cursor-pointer">
+                        <div className="flex items-center gap-2 sm:gap-3">
+                          <label className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm cursor-pointer min-h-[44px]">
                             <input
                               type="checkbox"
                               checked={variant.isDefault}
                               onChange={(e) => updateVariant(index, 'isDefault', e.target.checked)}
-                              className="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+                              className="rounded border-gray-300 text-purple-600 focus:ring-purple-500 h-4 w-4"
                             />
                             <span className="text-gray-600 dark:text-gray-400">Default</span>
                           </label>
@@ -1543,7 +1547,7 @@ export function ProductManager() {
                               variant="ghost"
                               size="sm"
                               onClick={() => removeVariant(index)}
-                              className="text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 h-8 w-8 p-0"
+                              className="text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 h-10 w-10 sm:h-8 sm:w-8 p-0"
                             >
                               <Trash2 className="h-4 w-4" />
                             </Button>
@@ -1551,85 +1555,88 @@ export function ProductManager() {
                         </div>
                       </div>
 
-                      <div className="p-4 space-y-4">
+                      <div className="p-3 sm:p-4 space-y-3 sm:space-y-4">
                         {/* Basic Info Row */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
                           <div>
-                            <Label className="text-sm font-medium text-gray-700 dark:text-gray-300">Name (optional)</Label>
+                            <Label className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">Name (optional)</Label>
                             <Input
                               value={variant.name}
                               onChange={(e) => updateVariant(index, 'name', e.target.value)}
                               placeholder="e.g., Basic Plan"
-                              className="mt-1.5 border-2 border-gray-300 dark:border-gray-600 h-10"
+                              className="mt-1.5 border-2 border-gray-300 dark:border-gray-600 h-11 text-base"
                             />
                           </div>
                           <div>
-                            <Label className="text-sm font-medium text-gray-700 dark:text-gray-300">Duration</Label>
+                            <Label className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">Duration</Label>
                             <Select
                               value={variant.duration}
                               onValueChange={(value) => updateVariant(index, 'duration', value)}
                             >
-                              <SelectTrigger className="mt-1.5 border-2 border-gray-300 dark:border-gray-600 h-10">
+                              <SelectTrigger className="mt-1.5 border-2 border-gray-300 dark:border-gray-600 h-11 text-base">
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent>
-                                <SelectItem value="1 Week">1 Week</SelectItem>
-                                <SelectItem value="1 Month">1 Month</SelectItem>
-                                <SelectItem value="2 Months">2 Months</SelectItem>
-                                <SelectItem value="3 Months">3 Months</SelectItem>
-                                <SelectItem value="6 Months">6 Months</SelectItem>
-                                <SelectItem value="1 Year">1 Year</SelectItem>
-                                <SelectItem value="Lifetime">Lifetime</SelectItem>
+                                <SelectItem value="1 Week" className="min-h-[44px]">1 Week</SelectItem>
+                                <SelectItem value="1 Month" className="min-h-[44px]">1 Month</SelectItem>
+                                <SelectItem value="2 Months" className="min-h-[44px]">2 Months</SelectItem>
+                                <SelectItem value="3 Months" className="min-h-[44px]">3 Months</SelectItem>
+                                <SelectItem value="6 Months" className="min-h-[44px]">6 Months</SelectItem>
+                                <SelectItem value="1 Year" className="min-h-[44px]">1 Year</SelectItem>
+                                <SelectItem value="Lifetime" className="min-h-[44px]">Lifetime</SelectItem>
                               </SelectContent>
                             </Select>
                           </div>
                         </div>
 
                         {/* Pricing Row */}
-                        <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
-                          <h5 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2">
+                        <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-3 sm:p-4 border border-gray-200 dark:border-gray-700">
+                          <h5 className="text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2">
                             💵 Pricing
                           </h5>
-                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
                             <div>
-                              <Label className="text-xs font-medium text-gray-600 dark:text-gray-400">Original Price (₹)</Label>
+                              <Label className="text-[10px] sm:text-xs font-medium text-gray-600 dark:text-gray-400">Original Price (₹)</Label>
                               <Input
                                 type="number"
                                 min="0"
+                                inputMode="numeric"
                                 value={variant.originalPrice || ''}
                                 onChange={(e) => updateVariant(index, 'originalPrice', Number(e.target.value))}
                                 placeholder="999"
-                                className="mt-1.5 border-2 border-gray-300 dark:border-gray-600 h-10 bg-white dark:bg-gray-800"
+                                className="mt-1.5 border-2 border-gray-300 dark:border-gray-600 h-11 bg-white dark:bg-gray-800 text-base"
                               />
                             </div>
                             <div>
-                              <Label className="text-xs font-medium text-gray-600 dark:text-gray-400">Sale Price (₹) <span className="text-red-500">*</span></Label>
+                              <Label className="text-[10px] sm:text-xs font-medium text-gray-600 dark:text-gray-400">Sale Price (₹) <span className="text-red-500">*</span></Label>
                               <Input
                                 type="number"
                                 min="1"
+                                inputMode="numeric"
                                 value={variant.salePrice || ''}
                                 onChange={(e) => updateVariant(index, 'salePrice', Number(e.target.value))}
                                 placeholder="499"
-                                className="mt-1.5 border-2 border-gray-300 dark:border-gray-600 h-10 bg-white dark:bg-gray-800"
+                                className="mt-1.5 border-2 border-gray-300 dark:border-gray-600 h-11 bg-white dark:bg-gray-800 text-base"
                               />
                             </div>
                             <div>
-                              <Label className="text-xs font-medium text-amber-700 dark:text-amber-400 flex items-center gap-1">
+                              <Label className="text-[10px] sm:text-xs font-medium text-amber-700 dark:text-amber-400 flex items-center gap-1">
                                 <span>💰</span> Vendor Price (₹)
                               </Label>
                               <Input
                                 type="number"
                                 min="0"
+                                inputMode="numeric"
                                 value={variant.costPrice || ''}
                                 onChange={(e) => updateVariant(index, 'costPrice', Number(e.target.value))}
                                 placeholder="299"
-                                className="mt-1.5 border-2 border-amber-400 dark:border-amber-600 bg-amber-50 dark:bg-amber-900/20 h-10"
+                                className="mt-1.5 border-2 border-amber-400 dark:border-amber-600 bg-amber-50 dark:bg-amber-900/20 h-11 text-base"
                               />
                             </div>
                           </div>
                           {variant.salePrice && variant.costPrice ? (
-                            <div className="mt-3 bg-green-100 dark:bg-green-900/30 border border-green-300 dark:border-green-700 rounded-lg p-2.5">
-                              <p className="text-xs text-green-700 dark:text-green-400 font-semibold">
+                            <div className="mt-3 bg-green-100 dark:bg-green-900/30 border border-green-300 dark:border-green-700 rounded-lg p-2 sm:p-2.5">
+                              <p className="text-[10px] sm:text-xs text-green-700 dark:text-green-400 font-semibold">
                                 💰 Profit: ₹{(variant.salePrice - variant.costPrice).toLocaleString()} ({Math.round(((variant.salePrice - variant.costPrice) / variant.salePrice) * 100)}%)
                               </p>
                             </div>
@@ -1638,33 +1645,33 @@ export function ProductManager() {
 
                         {/* Variant Delivery Type */}
                         <div>
-                          <Label className="text-sm font-medium text-gray-700 dark:text-gray-300">Delivery Type (optional)</Label>
-                          <p className="text-xs text-gray-500 dark:text-gray-400 mb-1.5">Overrides product default if set</p>
+                          <Label className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">Delivery Type (optional)</Label>
+                          <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 mb-1.5">Overrides product default if set</p>
                           <Select
                             value={variant.deliveryType || ''}
                             onValueChange={(value) => updateVariant(index, 'deliveryType', value === 'DEFAULT' ? undefined : value as DeliveryType)}
                           >
-                            <SelectTrigger className="border-2 border-gray-300 dark:border-gray-600 h-10">
+                            <SelectTrigger className="border-2 border-gray-300 dark:border-gray-600 h-11 text-base">
                               <SelectValue placeholder="Use product default" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="DEFAULT">Use product default</SelectItem>
-                              <SelectItem value="CREDENTIALS">Login Credentials</SelectItem>
-                              <SelectItem value="COUPON_CODE">Coupon/License Key</SelectItem>
-                              <SelectItem value="MANUAL_ACTIVATION">Manual Activation</SelectItem>
-                              <SelectItem value="INSTANT_KEY">Instant Key</SelectItem>
+                              <SelectItem value="DEFAULT" className="min-h-[44px]">Use product default</SelectItem>
+                              <SelectItem value="CREDENTIALS" className="min-h-[44px]">Login Credentials</SelectItem>
+                              <SelectItem value="COUPON_CODE" className="min-h-[44px]">Coupon/License Key</SelectItem>
+                              <SelectItem value="MANUAL_ACTIVATION" className="min-h-[44px]">Manual Activation</SelectItem>
+                              <SelectItem value="INSTANT_KEY" className="min-h-[44px]">Instant Key</SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
 
                         {/* Variant Features */}
                         <div className="pt-3 border-t border-gray-200 dark:border-gray-700">
-                          <div className="flex items-center justify-between mb-2">
-                            <Label className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1.5">
+                          <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+                            <Label className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1.5">
                               <ListChecks className="h-4 w-4 text-purple-500" />
                               Variant-Specific Features
                             </Label>
-                            <span className="text-xs text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded-full">
+                            <span className="text-[10px] sm:text-xs text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded-full">
                               {variant.featuresText?.split('\n').filter((f: string) => f.trim()).length || 0} features
                             </span>
                           </div>
@@ -1675,7 +1682,7 @@ export function ProductManager() {
                             className="border-2 border-gray-200 dark:border-gray-600 focus:border-purple-400 font-mono text-sm min-h-[80px] resize-y bg-white dark:bg-gray-800"
                             rows={3}
                           />
-                          <p className="text-xs text-gray-400 mt-1.5">
+                          <p className="text-[10px] sm:text-xs text-gray-400 mt-1.5">
                             Leave empty to use product's default features
                           </p>
                         </div>
@@ -1687,15 +1694,15 @@ export function ProductManager() {
             </TabsContent>
 
             {/* Delivery Tab */}
-            <TabsContent value="delivery" className="space-y-6">
+            <TabsContent value="delivery" className="space-y-4 sm:space-y-6">
               {/* Section 1: Product Type Selection */}
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 <div className="flex items-center gap-2 pb-2 border-b border-gray-200 dark:border-gray-700">
-                  <Package className="h-5 w-5 text-[#0A7A7A]" />
-                  <h3 className="font-bold text-gray-900 dark:text-white">Step 1: What type of activation is this?</h3>
+                  <Package className="h-4 w-4 sm:h-5 sm:w-5 text-[#0A7A7A]" />
+                  <h3 className="text-sm sm:text-base font-bold text-gray-900 dark:text-white">Step 1: Activation type</h3>
                 </div>
                 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-3">
                   {(Object.keys(deliveryTypeInfo) as DeliveryType[]).map((type) => (
                     <button
                       key={type}
@@ -1705,34 +1712,34 @@ export function ProductManager() {
                         deliveryType: type,
                         requiresUserInput: type === 'MANUAL_ACTIVATION'
                       })}
-                      className={`p-4 border-2 rounded-xl text-left transition-all ${
+                      className={`p-3 sm:p-4 border-2 rounded-xl text-left transition-all min-h-[60px] ${
                         editingProduct?.deliveryType === type
                           ? 'border-[#0A7A7A] bg-teal-50 dark:bg-teal-900/30 ring-2 ring-[#0A7A7A]/20'
                           : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 bg-white dark:bg-gray-800'
                       }`}
                     >
-                      <div className="flex items-start gap-3">
-                        <div className={`p-2 rounded-lg ${
+                      <div className="flex items-start gap-2 sm:gap-3">
+                        <div className={`p-1.5 sm:p-2 rounded-lg flex-shrink-0 ${
                           editingProduct?.deliveryType === type 
                             ? 'bg-[#0A7A7A] text-white' 
                             : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
                         }`}>
                           {deliveryTypeInfo[type].icon}
                         </div>
-                        <div className="flex-1">
-                          <span className={`font-semibold text-sm block ${
+                        <div className="flex-1 min-w-0">
+                          <span className={`text-xs sm:text-sm font-semibold block ${
                             editingProduct?.deliveryType === type 
                               ? 'text-[#0A7A7A] dark:text-teal-400' 
                               : 'text-gray-900 dark:text-white'
                           }`}>
                             {deliveryTypeInfo[type].label}
                           </span>
-                          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                          <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 mt-0.5 sm:mt-1 line-clamp-2">
                             {deliveryTypeInfo[type].description}
                           </p>
                         </div>
                         {editingProduct?.deliveryType === type && (
-                          <CheckCircle className="h-5 w-5 text-[#0A7A7A] flex-shrink-0" />
+                          <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-[#0A7A7A] flex-shrink-0" />
                         )}
                       </div>
                     </button>
@@ -1741,42 +1748,41 @@ export function ProductManager() {
               </div>
 
               {/* Section 2: Selected Type Details */}
-              <div className="space-y-4">
-                <div className="flex items-center gap-2 pb-2 border-b border-gray-200 dark:border-gray-700">
-                  <ListChecks className="h-5 w-5 text-[#0A7A7A]" />
-                  <h3 className="font-bold text-gray-900 dark:text-white">Step 2: Customer Requirements Message</h3>
-                  <span className="text-xs text-gray-500 dark:text-gray-400">(What users need to know before purchase)</span>
+              <div className="space-y-3 sm:space-y-4">
+                <div className="flex flex-wrap items-center gap-1 sm:gap-2 pb-2 border-b border-gray-200 dark:border-gray-700">
+                  <ListChecks className="h-4 w-4 sm:h-5 sm:w-5 text-[#0A7A7A]" />
+                  <h3 className="text-sm sm:text-base font-bold text-gray-900 dark:text-white">Step 2: Customer Requirements</h3>
                 </div>
 
                 {editingProduct?.deliveryType ? (
-                  <div className={`p-4 rounded-xl border-2 ${getDeliveryInfo(editingProduct.deliveryType).color} bg-opacity-50`}>
-                    <div className="flex items-center gap-2 mb-4">
+                  <div className={`p-3 sm:p-4 rounded-xl border-2 ${getDeliveryInfo(editingProduct.deliveryType).color} bg-opacity-50`}>
+                    <div className="flex items-center gap-2 mb-3 sm:mb-4">
                       <div className="p-1.5 rounded-lg bg-white/50 dark:bg-black/20">
                         {getDeliveryInfo(editingProduct.deliveryType).icon}
                       </div>
-                      <span className="font-bold">{getDeliveryInfo(editingProduct.deliveryType).label}</span>
+                      <span className="text-sm sm:text-base font-bold">{getDeliveryInfo(editingProduct.deliveryType).label}</span>
                     </div>
                     
                     {/* Customer Requirements Message */}
-                    <div className="bg-white/60 dark:bg-gray-800/60 rounded-lg p-3">
-                      <Label className="text-xs font-semibold flex items-center gap-1.5 mb-2 text-gray-700 dark:text-gray-300">
+                    <div className="bg-white/60 dark:bg-gray-800/60 rounded-lg p-2 sm:p-3">
+                      <Label className="text-[10px] sm:text-xs font-semibold flex items-center gap-1.5 mb-2 text-gray-700 dark:text-gray-300">
                         📋 Customer Requirements Message
                       </Label>
                       <textarea
                         value={editingProduct?.customUserSeesLabel || ''}
                         onChange={(e) => setEditingProduct({ ...editingProduct, customUserSeesLabel: e.target.value })}
-                        placeholder="e.g., You need to provide your Netflix email and password. Please create an account first if you don't have one."
+                        placeholder="e.g., You need to provide your Netflix email and password."
                         className="w-full text-sm border bg-white dark:bg-gray-800 rounded-md p-2 min-h-[80px] resize-y"
                         rows={3}
                       />
-                      <p className="text-xs text-gray-500 mt-1.5">
-                        This message will be shown to customers on the product page. Explain what they need to do or provide.
+                      <p className="text-[10px] sm:text-xs text-gray-500 mt-1.5">
+                        This message will be shown to customers on the product page.
                       </p>
                     </div>
                   </div>
                 ) : (
-                  <div className="p-4 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800/50">
-                    <p className="text-sm text-gray-500 dark:text-gray-400 text-center">
+                  <div className="p-3 sm:p-4 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800/50">
+                    <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 text-center">
                       👆 Please select an activation type in Step 1 first
                     </p>
                   </div>
@@ -1784,32 +1790,32 @@ export function ProductManager() {
               </div>
 
               {/* Section 3: Fulfillment Method */}
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 <div className="flex items-center gap-2 pb-2 border-b border-gray-200 dark:border-gray-700">
-                  <Send className="h-5 w-5 text-[#0A7A7A]" />
-                  <h3 className="font-bold text-gray-900 dark:text-white">Step 3: How will you deliver?</h3>
+                  <Send className="h-4 w-4 sm:h-5 sm:w-5 text-[#0A7A7A]" />
+                  <h3 className="text-sm sm:text-base font-bold text-gray-900 dark:text-white">Step 3: How will you deliver?</h3>
                 </div>
                 
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
+                <div className="grid grid-cols-3 gap-1.5 sm:grid-cols-5 sm:gap-2">
                   {(Object.keys(fulfillmentMethodInfo) as FulfillmentMethod[]).map((method) => (
                     <button
                       key={method}
                       type="button"
                       onClick={() => setEditingProduct({ ...editingProduct, fulfillmentMethod: method })}
-                      className={`p-3 border-2 rounded-xl text-center transition-all ${
+                      className={`p-2 sm:p-3 border-2 rounded-xl text-center transition-all min-h-[60px] sm:min-h-[80px] ${
                         editingProduct?.fulfillmentMethod === method
                           ? 'border-[#0A7A7A] bg-teal-50 dark:bg-teal-900/30 ring-2 ring-[#0A7A7A]/20'
                           : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 bg-white dark:bg-gray-800'
                       }`}
                     >
-                      <div className={`mx-auto w-8 h-8 rounded-lg flex items-center justify-center mb-2 ${
+                      <div className={`mx-auto w-6 h-6 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center mb-1 sm:mb-2 ${
                         editingProduct?.fulfillmentMethod === method 
                           ? 'bg-[#0A7A7A] text-white' 
                           : 'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400'
                       }`}>
                         {fulfillmentMethodInfo[method].icon}
                       </div>
-                      <span className={`font-medium text-xs block ${
+                      <span className={`font-medium text-[9px] sm:text-xs block leading-tight ${
                         editingProduct?.fulfillmentMethod === method 
                           ? 'text-[#0A7A7A] dark:text-teal-400' 
                           : 'text-gray-700 dark:text-gray-300'
@@ -2054,19 +2060,19 @@ export function ProductManager() {
           </Tabs>
 
           {/* Actions */}
-          <div className="flex justify-end gap-3 pt-4 border-t-2 border-black">
+          <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end sm:gap-3 pt-4 border-t-2 border-black">
             <Button
               variant="outline"
               onClick={handleCloseDialog}
               disabled={isSaving}
-              className="border-2 border-black"
+              className="border-2 border-black min-h-[44px] w-full sm:w-auto"
             >
               Cancel
             </Button>
             <Button
               onClick={handleSave}
               disabled={isSaving}
-              className="bg-[#0A7A7A] hover:bg-[#086666] text-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+              className="bg-[#0A7A7A] hover:bg-[#086666] text-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] min-h-[44px] w-full sm:w-auto"
             >
               {isSaving ? (
                 <>
@@ -2083,12 +2089,12 @@ export function ProductManager() {
 
       {/* Stock Management Dialog */}
       <Dialog open={isStockDialogOpen} onOpenChange={setIsStockDialogOpen}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-          <DialogHeader className="border-b-2 border-black pb-4">
-            <div className="flex items-center justify-between">
-              <DialogTitle className="text-xl font-bold font-['Space_Grotesk'] flex items-center gap-2">
-                <Database className="h-5 w-5 text-green-600" />
-                Stock Management - {selectedProductForStock?.name}
+        <DialogContent className="max-w-3xl w-[95vw] max-h-[90vh] overflow-y-auto border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-3 sm:p-6">
+          <DialogHeader className="border-b-2 border-black pb-3 sm:pb-4">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <DialogTitle className="text-base sm:text-xl font-bold font-['Space_Grotesk'] flex items-center gap-2">
+                <Database className="h-4 w-4 sm:h-5 sm:w-5 text-green-600" />
+                <span className="truncate">Stock - {selectedProductForStock?.name}</span>
               </DialogTitle>
               <Button
                 variant="outline"
@@ -2100,7 +2106,7 @@ export function ProductManager() {
                     toast({ title: 'Refreshed', description: 'Stock data reloaded' });
                   }
                 }}
-                className="border-2 border-gray-300"
+                className="border-2 border-gray-300 min-h-[44px] w-full sm:w-auto"
               >
                 <RefreshCw className="h-4 w-4 mr-1" />
                 Refresh
@@ -2108,7 +2114,7 @@ export function ProductManager() {
             </div>
           </DialogHeader>
 
-          <div className="space-y-6 py-4">
+          <div className="space-y-4 sm:space-y-6 py-3 sm:py-4">
             {/* Manual Stock Option */}
             <div className="p-4 bg-amber-50 border-2 border-amber-200 rounded-lg space-y-3">
               <div className="flex items-center justify-between">
