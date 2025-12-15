@@ -870,7 +870,9 @@ export type Database = {
           created_at: string | null
           delivery_type: string | null
           duration: string
+          features: string[] | null
           id: string
+          is_active: boolean | null
           is_default: boolean | null
           name: string
           original_price: number
@@ -886,7 +888,9 @@ export type Database = {
           created_at?: string | null
           delivery_type?: string | null
           duration: string
+          features?: string[] | null
           id?: string
+          is_active?: boolean | null
           is_default?: boolean | null
           name: string
           original_price: number
@@ -902,7 +906,9 @@ export type Database = {
           created_at?: string | null
           delivery_type?: string | null
           duration?: string
+          features?: string[] | null
           id?: string
+          is_active?: boolean | null
           is_default?: boolean | null
           name?: string
           original_price?: number
