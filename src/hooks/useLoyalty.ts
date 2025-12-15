@@ -75,12 +75,13 @@ export function useLoyalty() {
       }
 
       if (loyaltyData) {
+        const tier = loyaltyData.tier as 'bronze' | 'silver' | 'gold' | 'platinum';
         setLoyalty({
           id: loyaltyData.id,
           userId: loyaltyData.user_id,
-          totalPoints: loyaltyData.total_points,
-          lifetimePoints: loyaltyData.lifetime_points,
-          tier: loyaltyData.tier,
+          totalPoints: loyaltyData.total_points || 0,
+          lifetimePoints: loyaltyData.lifetime_points || 0,
+          tier: tier || 'bronze',
         });
       }
 
@@ -95,12 +96,12 @@ export function useLoyalty() {
       if (txError) throw txError;
 
       setTransactions(
-        txData.map((t) => ({
+        txData.map((t: any) => ({
           id: t.id,
           userId: t.user_id,
           points: t.points,
-          type: t.type,
-          description: t.description,
+          type: t.type as 'earned' | 'redeemed' | 'bonus' | 'referral',
+          description: t.description || '',
           orderId: t.order_id,
           createdAt: t.created_at,
         }))

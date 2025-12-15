@@ -28,7 +28,7 @@ export function useProducts() {
 
       if (error) throw error;
 
-      const mappedProducts = data.map((p) => ({
+      const mappedProducts: Product[] = data.map((p: any) => ({
         id: p.id,
         name: p.name,
         description: p.description,
@@ -51,6 +51,7 @@ export function useProducts() {
         lowStockAlert: p.low_stock_alert,
         useManualStock: p.use_manual_stock || false,
         manualStockCount: p.manual_stock_count || 0,
+        stockCount: 0,
       }));
 
       // Load variants and stock counts for products

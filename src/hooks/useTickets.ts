@@ -47,14 +47,14 @@ export function useUserTickets() {
       if (error) throw error;
 
       setTickets(
-        data.map((t) => ({
+        data.map((t: any) => ({
           id: t.id,
           userId: t.user_id,
           subject: t.subject,
           description: t.description,
-          category: t.category,
-          priority: t.priority,
-          status: t.status,
+          category: t.category as 'general' | 'order' | 'payment' | 'refund' | 'technical',
+          priority: t.priority as 'low' | 'medium' | 'high' | 'urgent',
+          status: t.status as 'open' | 'in_progress' | 'resolved' | 'closed',
           orderId: t.order_id,
           adminResponse: t.admin_response,
           respondedAt: t.responded_at,
@@ -150,16 +150,16 @@ export function useAdminTickets() {
 
       if (error) throw error;
 
-      const mappedTickets = data.map((t) => ({
+      const mappedTickets: SupportTicket[] = data.map((t: any) => ({
         id: t.id,
         userId: t.user_id,
         userName: t.profile?.full_name || t.profile?.name || t.profile?.email?.split('@')[0] || 'Unknown',
         userEmail: t.profile?.email || '',
         subject: t.subject,
         description: t.description,
-        category: t.category,
-        priority: t.priority,
-        status: t.status,
+        category: t.category as 'general' | 'order' | 'payment' | 'refund' | 'technical',
+        priority: t.priority as 'low' | 'medium' | 'high' | 'urgent',
+        status: t.status as 'open' | 'in_progress' | 'resolved' | 'closed',
         orderId: t.order_id,
         adminResponse: t.admin_response,
         respondedAt: t.responded_at,
@@ -191,7 +191,13 @@ export function useAdminTickets() {
     if (!isSupabaseConfigured) {
       setTickets(tickets.map(t => 
         t.id === ticketId 
-          ? { ...t, ...updates, updatedAt: new Date().toISOString() } 
+          ? { 
+              ...t, 
+              status: (updates.status as 'open' | 'in_progress' | 'resolved' | 'closed') || t.status,
+              priority: (updates.priority as 'low' | 'medium' | 'high' | 'urgent') || t.priority,
+              adminResponse: updates.adminResponse !== undefined ? updates.adminResponse : t.adminResponse,
+              updatedAt: new Date().toISOString() 
+            } 
           : t
       ));
       return;

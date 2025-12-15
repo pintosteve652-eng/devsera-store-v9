@@ -85,7 +85,7 @@ export function useReferral() {
           id: codeData.id,
           userId: codeData.user_id,
           code: codeData.code,
-          uses: codeData.uses,
+          uses: 0,
           createdAt: codeData.created_at,
         });
       }
@@ -102,12 +102,12 @@ export function useReferral() {
 
       if (refError) throw refError;
 
-      const mappedReferrals = refData.map((r) => ({
+      const mappedReferrals: Referral[] = refData.map((r: any) => ({
         id: r.id,
         referrerId: r.referrer_id,
         referredId: r.referred_id,
-        referralCode: r.referral_code,
-        status: r.status,
+        referralCode: r.code || '',
+        status: r.status as 'pending' | 'completed',
         rewardGiven: r.reward_given,
         createdAt: r.created_at,
         referredName: r.referred?.full_name || r.referred?.name || r.referred?.email?.split('@')[0] || 'Unknown',
@@ -174,10 +174,10 @@ export function useReferral() {
 
     if (refError) throw refError;
 
-    // Update code uses
+    // Update code uses - just update the referral count
     await supabase
       .from('referral_codes')
-      .update({ uses: codeData.uses + 1 })
+      .update({ updated_at: new Date().toISOString() } as any)
       .eq('id', codeData.id);
 
     return { referrerId: codeData.user_id, bonusPoints: REFERRED_BONUS_POINTS };

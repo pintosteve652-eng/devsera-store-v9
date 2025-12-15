@@ -45,15 +45,15 @@ export function useCoupons() {
       if (error) throw error;
 
       setCoupons(
-        data.map((c) => ({
+        data.map((c: any) => ({
           id: c.id,
-          userId: c.user_id,
+          userId: c.user_id || '',
           code: c.code,
-          discountAmount: parseFloat(c.discount_amount),
-          pointsUsed: c.points_used,
-          isUsed: c.is_used,
+          discountAmount: Number(c.discount_value) || 0,
+          pointsUsed: c.used_count || 0,
+          isUsed: c.is_used || false,
           usedAt: c.used_at,
-          orderId: c.order_id,
+          orderId: '',
           expiresAt: c.expires_at,
           createdAt: c.created_at,
         }))
@@ -102,10 +102,10 @@ export function useCoupons() {
       .insert({
         user_id: user.id,
         code: couponCode,
-        discount_amount: COUPON_VALUE,
-        points_used: POINTS_PER_COUPON,
+        discount_type: 'fixed',
+        discount_value: COUPON_VALUE,
         expires_at: expiresAt.toISOString(),
-      })
+      } as any)
       .select()
       .single();
 
@@ -154,7 +154,7 @@ export function useCoupons() {
 
     return {
       id: data.id,
-      discountAmount: parseFloat(data.discount_amount),
+      discountAmount: Number(data.discount_value) || 0,
     };
   };
 

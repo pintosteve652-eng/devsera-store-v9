@@ -144,7 +144,7 @@ const permissionGroups = [
 
 export function AdminManager() {
   const { toast } = useToast();
-  const { admins, isLoading, createAdmin, updateAdminPermissions, updateAdminRole, toggleAdminStatus, deleteAdmin, defaultPermissions } = useAdminManagement();
+  const { admins, isLoading, createAdmin, updateAdminPermissions, updateAdminRole, toggleAdminStatus, deleteAdmin, resetAdminPassword, defaultPermissions } = useAdminManagement();
   const { isSuperAdmin, hasPermission } = useCurrentAdminPermissions();
   
   const [showCreateDialog, setShowCreateDialog] = useState(false);
@@ -515,19 +515,19 @@ export function AdminManager() {
                         </Badge>
                       ) : admin.permissions ? (
                         <>
-                          {admin.permissions.can_manage_products && (
+                          {admin.permissions.can_edit_products && (
                             <Badge variant="outline" className="text-xs"><ShoppingBag className="h-3 w-3 mr-1" />Products</Badge>
                           )}
-                          {admin.permissions.can_manage_orders && (
+                          {admin.permissions.can_edit_orders && (
                             <Badge variant="outline" className="text-xs"><Package className="h-3 w-3 mr-1" />Orders</Badge>
                           )}
-                          {admin.permissions.can_manage_customers && (
+                          {admin.permissions.can_edit_customers && (
                             <Badge variant="outline" className="text-xs"><Users className="h-3 w-3 mr-1" />Customers</Badge>
                           )}
-                          {admin.permissions.can_manage_tickets && (
+                          {admin.permissions.can_edit_tickets && (
                             <Badge variant="outline" className="text-xs"><Ticket className="h-3 w-3 mr-1" />Tickets</Badge>
                           )}
-                          {admin.permissions.can_manage_premium && (
+                          {admin.permissions.can_edit_premium && (
                             <Badge variant="outline" className="text-xs"><Crown className="h-3 w-3 mr-1" />Premium</Badge>
                           )}
                         </>
