@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
-import { supabase, isSupabaseConfigured } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase';
 import { Product, DeliveryType, ProductVariant } from '@/types';
-import { mockProducts } from '@/data/mockData';
 
 export function useProducts() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -13,11 +12,6 @@ export function useProducts() {
   }, []);
 
   const loadProducts = async () => {
-    if (!isSupabaseConfigured) {
-      setProducts(mockProducts);
-      setIsLoading(false);
-      return;
-    }
 
     try {
       const { data, error } = await supabase
@@ -99,8 +93,7 @@ export function useProducts() {
       setProducts(mappedProducts);
     } catch (err) {
       setError(err as Error);
-      // Fallback to mock data on error
-      setProducts(mockProducts);
+      setProducts([]);
     } finally {
       setIsLoading(false);
     }
@@ -119,12 +112,6 @@ export function useProduct(id: string) {
   }, [id]);
 
   const loadProduct = async () => {
-    if (!isSupabaseConfigured) {
-      const mockProduct = mockProducts.find(p => p.id === id);
-      setProduct(mockProduct || null);
-      setIsLoading(false);
-      return;
-    }
 
     try {
       const { data, error } = await supabase
@@ -204,9 +191,7 @@ export function useProduct(id: string) {
       }
     } catch (err) {
       setError(err as Error);
-      // Fallback to mock data on error
-      const mockProduct = mockProducts.find(p => p.id === id);
-      setProduct(mockProduct || null);
+      setProduct(null);
     } finally {
       setIsLoading(false);
     }
