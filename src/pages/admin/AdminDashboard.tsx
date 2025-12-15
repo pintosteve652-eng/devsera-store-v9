@@ -271,56 +271,56 @@ export function AdminDashboard() {
         </div>
 
         {/* Order Status - Inline Compact */}
-        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 mb-6">
-          <div className="flex items-center justify-between flex-wrap gap-4">
-            <h3 className="text-sm font-medium text-gray-900 dark:text-white">Order Status</h3>
-            <div className="flex items-center gap-6">
-              <div className="flex items-center gap-2">
-                <Clock className="h-4 w-4 text-amber-500" />
-                <span className="text-sm text-gray-600 dark:text-gray-400">Pending</span>
-                <span className="text-sm font-semibold text-amber-600 dark:text-amber-400">{orderCounts.pending}</span>
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-3 sm:p-4 mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+            <h3 className="text-xs sm:text-sm font-medium text-gray-900 dark:text-white">Order Status</h3>
+            <div className="grid grid-cols-4 sm:flex sm:items-center gap-2 sm:gap-6">
+              <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-center sm:text-left">
+                <Clock className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-amber-500" />
+                <span className="text-[10px] sm:text-sm text-gray-600 dark:text-gray-400 hidden sm:inline">Pending</span>
+                <span className="text-xs sm:text-sm font-semibold text-amber-600 dark:text-amber-400">{orderCounts.pending}</span>
               </div>
-              <div className="flex items-center gap-2">
-                <BarChart3 className="h-4 w-4 text-blue-500" />
-                <span className="text-sm text-gray-600 dark:text-gray-400">Submitted</span>
-                <span className="text-sm font-semibold text-blue-600 dark:text-blue-400">{orderCounts.submitted}</span>
+              <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-center sm:text-left">
+                <BarChart3 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-blue-500" />
+                <span className="text-[10px] sm:text-sm text-gray-600 dark:text-gray-400 hidden sm:inline">Submitted</span>
+                <span className="text-xs sm:text-sm font-semibold text-blue-600 dark:text-blue-400">{orderCounts.submitted}</span>
               </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                <span className="text-sm text-gray-600 dark:text-gray-400">Completed</span>
-                <span className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">{orderCounts.completed}</span>
+              <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-center sm:text-left">
+                <CheckCircle2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-emerald-500" />
+                <span className="text-[10px] sm:text-sm text-gray-600 dark:text-gray-400 hidden sm:inline">Completed</span>
+                <span className="text-xs sm:text-sm font-semibold text-emerald-600 dark:text-emerald-400">{orderCounts.completed}</span>
               </div>
-              <div className="flex items-center gap-2">
-                <XCircle className="h-4 w-4 text-red-500" />
-                <span className="text-sm text-gray-600 dark:text-gray-400">Cancelled</span>
-                <span className="text-sm font-semibold text-red-600 dark:text-red-400">{orderCounts.cancelled}</span>
+              <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-center sm:text-left">
+                <XCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-red-500" />
+                <span className="text-[10px] sm:text-sm text-gray-600 dark:text-gray-400 hidden sm:inline">Cancelled</span>
+                <span className="text-xs sm:text-sm font-semibold text-red-600 dark:text-red-400">{orderCounts.cancelled}</span>
               </div>
             </div>
           </div>
         </div>
 
         {/* Admin Tabs */}
-        <Tabs defaultValue={getDefaultTab()} className="space-y-6 sm:space-y-8">
-          <div className="overflow-x-auto -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 pb-2">
-            <TabsList className="bg-white dark:bg-gray-800/90 backdrop-blur-sm border border-gray-200/80 dark:border-gray-700/50 h-auto p-2 flex flex-nowrap rounded-2xl shadow-lg shadow-gray-200/50 dark:shadow-black/20 min-w-max gap-1.5">
+        <Tabs defaultValue={getDefaultTab()} className="space-y-4 sm:space-y-8">
+          <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0 pb-2 scrollbar-hide">
+            <TabsList className="bg-white dark:bg-gray-800/90 backdrop-blur-sm border border-gray-200/80 dark:border-gray-700/50 h-auto p-1.5 sm:p-2 flex flex-nowrap rounded-xl sm:rounded-2xl shadow-lg shadow-gray-200/50 dark:shadow-black/20 min-w-max gap-1">
             {(isSuperAdmin || hasPermission('can_view_orders')) && (
               <TabsTrigger
                 value="orders"
-                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-500 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-indigo-500/30 font-semibold rounded-xl text-sm whitespace-nowrap px-4 py-2.5 transition-all duration-200 flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-700/50"
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-500 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-indigo-500/30 font-semibold rounded-lg sm:rounded-xl text-xs sm:text-sm whitespace-nowrap px-2.5 sm:px-4 py-2 sm:py-2.5 transition-all duration-200 flex items-center gap-1 sm:gap-2 hover:bg-gray-100 dark:hover:bg-gray-700/50"
               >
-                <ShoppingBag className="h-4 w-4" />
-                <span>Orders</span>
+                <ShoppingBag className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <span className="hidden sm:inline">Orders</span>
               </TabsTrigger>
             )}
             {(isSuperAdmin || hasPermission('can_view_tickets')) && (
               <TabsTrigger
                 value="tickets"
-                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-500 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-indigo-500/30 font-semibold rounded-xl relative px-4 py-2.5 transition-all duration-200 flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-700/50"
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-500 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-indigo-500/30 font-semibold rounded-lg sm:rounded-xl relative px-2.5 sm:px-4 py-2 sm:py-2.5 transition-all duration-200 flex items-center gap-1 sm:gap-2 hover:bg-gray-100 dark:hover:bg-gray-700/50"
               >
-                <Ticket className="h-4 w-4" />
-                <span>Tickets</span>
+                <Ticket className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <span className="hidden sm:inline">Tickets</span>
                 {ticketStats.open > 0 && (
-                  <span className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center animate-pulse shadow-lg shadow-red-500/50">
+                  <span className="absolute -top-1 -right-1 sm:-top-1.5 sm:-right-1.5 w-4 h-4 sm:w-5 sm:h-5 bg-red-500 text-white text-[8px] sm:text-[10px] font-bold rounded-full flex items-center justify-center animate-pulse shadow-lg shadow-red-500/50">
                     {ticketStats.open}
                   </span>
                 )}
@@ -329,66 +329,66 @@ export function AdminDashboard() {
             {(isSuperAdmin || hasPermission('can_view_products')) && (
               <TabsTrigger
                 value="products"
-                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-500 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-indigo-500/30 font-semibold rounded-xl text-sm whitespace-nowrap px-4 py-2.5 transition-all duration-200 flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-700/50"
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-500 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-indigo-500/30 font-semibold rounded-lg sm:rounded-xl text-xs sm:text-sm whitespace-nowrap px-2.5 sm:px-4 py-2 sm:py-2.5 transition-all duration-200 flex items-center gap-1 sm:gap-2 hover:bg-gray-100 dark:hover:bg-gray-700/50"
               >
-                <Package className="h-4 w-4" />
-                <span>Products</span>
+                <Package className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <span className="hidden sm:inline">Products</span>
               </TabsTrigger>
             )}
             {(isSuperAdmin || hasPermission('can_view_customers')) && (
               <TabsTrigger
                 value="customers"
-                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-500 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-indigo-500/30 font-semibold rounded-xl text-sm whitespace-nowrap px-4 py-2.5 transition-all duration-200 flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-700/50"
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-500 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-indigo-500/30 font-semibold rounded-lg sm:rounded-xl text-xs sm:text-sm whitespace-nowrap px-2.5 sm:px-4 py-2 sm:py-2.5 transition-all duration-200 flex items-center gap-1 sm:gap-2 hover:bg-gray-100 dark:hover:bg-gray-700/50"
               >
-                <Users className="h-4 w-4" />
-                <span>Customers</span>
+                <Users className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <span className="hidden sm:inline">Users</span>
               </TabsTrigger>
             )}
             {(isSuperAdmin || hasPermission('can_view_bundles')) && (
               <TabsTrigger
                 value="bundles"
-                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-500 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-indigo-500/30 font-semibold rounded-xl text-sm whitespace-nowrap px-4 py-2.5 transition-all duration-200 flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-700/50"
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-500 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-indigo-500/30 font-semibold rounded-lg sm:rounded-xl text-xs sm:text-sm whitespace-nowrap px-2.5 sm:px-4 py-2 sm:py-2.5 transition-all duration-200 flex items-center gap-1 sm:gap-2 hover:bg-gray-100 dark:hover:bg-gray-700/50"
               >
-                <Gift className="h-4 w-4" />
-                <span>Bundles</span>
+                <Gift className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <span className="hidden sm:inline">Bundles</span>
               </TabsTrigger>
             )}
             {(isSuperAdmin || hasPermission('can_view_flash_sales')) && (
               <TabsTrigger
                 value="flashsales"
-                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-rose-500 data-[state=active]:to-orange-500 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-rose-500/30 font-semibold rounded-xl text-sm whitespace-nowrap px-4 py-2.5 transition-all duration-200 flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-700/50"
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-rose-500 data-[state=active]:to-orange-500 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-rose-500/30 font-semibold rounded-lg sm:rounded-xl text-xs sm:text-sm whitespace-nowrap px-2.5 sm:px-4 py-2 sm:py-2.5 transition-all duration-200 flex items-center gap-1 sm:gap-2 hover:bg-gray-100 dark:hover:bg-gray-700/50"
               >
-                <Flame className="h-4 w-4" />
-                <span>Flash</span>
+                <Flame className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <span className="hidden lg:inline">Flash</span>
               </TabsTrigger>
             )}
             {(isSuperAdmin || hasPermission('can_view_flash_sales')) && (
               <TabsTrigger
                 value="banners"
-                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-cyan-500 data-[state=active]:to-blue-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-cyan-500/30 font-semibold rounded-xl text-sm whitespace-nowrap px-4 py-2.5 transition-all duration-200 flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-700/50"
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-cyan-500 data-[state=active]:to-blue-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-cyan-500/30 font-semibold rounded-lg sm:rounded-xl text-xs sm:text-sm whitespace-nowrap px-2.5 sm:px-4 py-2 sm:py-2.5 transition-all duration-200 flex items-center gap-1 sm:gap-2 hover:bg-gray-100 dark:hover:bg-gray-700/50"
               >
-                <ImageIcon className="h-4 w-4" />
-                <span>Banners</span>
+                <ImageIcon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <span className="hidden lg:inline">Banners</span>
               </TabsTrigger>
             )}
             {(isSuperAdmin || hasPermission('can_view_products')) && (
               <TabsTrigger
                 value="stockusage"
-                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-violet-500 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-violet-500/30 font-semibold rounded-xl text-sm whitespace-nowrap px-4 py-2.5 transition-all duration-200 flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-700/50"
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-violet-500 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-violet-500/30 font-semibold rounded-lg sm:rounded-xl text-xs sm:text-sm whitespace-nowrap px-2.5 sm:px-4 py-2 sm:py-2.5 transition-all duration-200 flex items-center gap-1 sm:gap-2 hover:bg-gray-100 dark:hover:bg-gray-700/50"
               >
-                <Database className="h-4 w-4" />
-                <span>Stock</span>
+                <Database className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <span className="hidden lg:inline">Stock</span>
               </TabsTrigger>
             )}
             {(isSuperAdmin || hasPermission('can_view_premium')) && (
               <TabsTrigger
                 value="premium"
-                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-amber-500 data-[state=active]:to-yellow-500 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-amber-500/30 font-semibold rounded-xl relative px-4 py-2.5 transition-all duration-200 flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-700/50"
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-amber-500 data-[state=active]:to-yellow-500 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-amber-500/30 font-semibold rounded-lg sm:rounded-xl relative px-2.5 sm:px-4 py-2 sm:py-2.5 transition-all duration-200 flex items-center gap-1 sm:gap-2 hover:bg-gray-100 dark:hover:bg-gray-700/50"
               >
-                <Crown className="h-4 w-4" />
-                <span>Premium</span>
+                <Crown className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <span className="hidden lg:inline">Premium</span>
                 {pendingRequests.length > 0 && (
-                  <span className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-amber-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center animate-pulse shadow-lg shadow-amber-500/50">
+                  <span className="absolute -top-1 -right-1 sm:-top-1.5 sm:-right-1.5 w-4 h-4 sm:w-5 sm:h-5 bg-amber-500 text-white text-[8px] sm:text-[10px] font-bold rounded-full flex items-center justify-center animate-pulse shadow-lg shadow-amber-500/50">
                     {pendingRequests.length}
                   </span>
                 )}
@@ -397,52 +397,52 @@ export function AdminDashboard() {
             {(isSuperAdmin || hasPermission('can_view_rewards')) && (
               <TabsTrigger
                 value="rewards"
-                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-500 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-indigo-500/30 font-semibold rounded-xl text-sm whitespace-nowrap px-4 py-2.5 transition-all duration-200 flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-700/50"
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-500 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-indigo-500/30 font-semibold rounded-lg sm:rounded-xl text-xs sm:text-sm whitespace-nowrap px-2.5 sm:px-4 py-2 sm:py-2.5 transition-all duration-200 flex items-center gap-1 sm:gap-2 hover:bg-gray-100 dark:hover:bg-gray-700/50"
               >
-                <Sparkles className="h-4 w-4" />
-                <span>Rewards</span>
+                <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <span className="hidden lg:inline">Rewards</span>
               </TabsTrigger>
             )}
             {(isSuperAdmin || hasPermission('can_view_community')) && (
               <TabsTrigger
                 value="community"
-                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-500 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-indigo-500/30 font-semibold rounded-xl text-sm whitespace-nowrap px-4 py-2.5 transition-all duration-200 flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-700/50"
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-500 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-indigo-500/30 font-semibold rounded-lg sm:rounded-xl text-xs sm:text-sm whitespace-nowrap px-2.5 sm:px-4 py-2 sm:py-2.5 transition-all duration-200 flex items-center gap-1 sm:gap-2 hover:bg-gray-100 dark:hover:bg-gray-700/50"
               >
-                <MessageSquare className="h-4 w-4" />
-                <span>Community</span>
+                <MessageSquare className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <span className="hidden lg:inline">Posts</span>
               </TabsTrigger>
             )}
             {(isSuperAdmin || hasPermission('can_view_settings')) && (
               <TabsTrigger
                 value="settings"
-                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-500 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-indigo-500/30 font-semibold rounded-xl text-sm whitespace-nowrap px-4 py-2.5 transition-all duration-200 flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-700/50"
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-500 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-indigo-500/30 font-semibold rounded-lg sm:rounded-xl text-xs sm:text-sm whitespace-nowrap px-2.5 sm:px-4 py-2 sm:py-2.5 transition-all duration-200 flex items-center gap-1 sm:gap-2 hover:bg-gray-100 dark:hover:bg-gray-700/50"
               >
-                <Activity className="h-4 w-4" />
-                <span>Settings</span>
+                <Activity className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <span className="hidden lg:inline">Settings</span>
               </TabsTrigger>
             )}
             {(isSuperAdmin || hasPermission('can_manage_admins')) && (
               <TabsTrigger
                 value="admins"
-                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-purple-500/30 font-semibold rounded-xl text-sm whitespace-nowrap px-4 py-2.5 transition-all duration-200 flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-700/50"
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-purple-500/30 font-semibold rounded-lg sm:rounded-xl text-xs sm:text-sm whitespace-nowrap px-2.5 sm:px-4 py-2 sm:py-2.5 transition-all duration-200 flex items-center gap-1 sm:gap-2 hover:bg-gray-100 dark:hover:bg-gray-700/50"
               >
-                <Shield className="h-4 w-4" />
-                <span>Admins</span>
+                <Shield className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <span className="hidden lg:inline">Admins</span>
               </TabsTrigger>
             )}
             {(isSuperAdmin || hasPermission('can_view_tickets')) && (
               <TabsTrigger
                 value="contacts"
-                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-cyan-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-blue-500/30 font-semibold rounded-xl text-sm whitespace-nowrap px-4 py-2.5 transition-all duration-200 flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-700/50"
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-cyan-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-blue-500/30 font-semibold rounded-lg sm:rounded-xl text-xs sm:text-sm whitespace-nowrap px-2.5 sm:px-4 py-2 sm:py-2.5 transition-all duration-200 flex items-center gap-1 sm:gap-2 hover:bg-gray-100 dark:hover:bg-gray-700/50"
               >
-                <Mail className="h-4 w-4" />
-                <span>Contacts</span>
+                <Mail className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <span className="hidden lg:inline">Contacts</span>
               </TabsTrigger>
             )}
           </TabsList>
           </div>
 
-          <div className="bg-white dark:bg-gray-800/90 backdrop-blur-sm rounded-2xl border border-gray-200/80 dark:border-gray-700/50 shadow-xl shadow-gray-200/50 dark:shadow-black/20 overflow-hidden">
+          <div className="bg-white dark:bg-gray-800/90 backdrop-blur-sm rounded-xl sm:rounded-2xl border border-gray-200/80 dark:border-gray-700/50 shadow-xl shadow-gray-200/50 dark:shadow-black/20 overflow-hidden">
           <TabsContent value="orders" className="m-0">
             <OrderVerificationPanel />
           </TabsContent>

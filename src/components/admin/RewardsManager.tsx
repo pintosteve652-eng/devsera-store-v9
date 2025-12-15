@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
@@ -140,157 +139,154 @@ export function RewardsManager() {
   };
 
   return (
-    <Card className="border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-      <CardHeader className="border-b-2 border-black bg-gradient-to-r from-purple-50 to-pink-50">
-        <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2">
-            <Gift className="h-5 w-5" />
-            Rewards & Referrals Management
-          </CardTitle>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={loadData}
-            className="border-2 border-black"
+    <div className="p-3 sm:p-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 sm:mb-6">
+        <h2 className="text-lg sm:text-xl font-bold flex items-center gap-2">
+          <Gift className="h-5 w-5" />
+          Rewards & Referrals
+        </h2>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={loadData}
+          className="border border-gray-200 dark:border-gray-700 h-9"
+        >
+          <RefreshCw className="h-4 w-4 mr-1" />
+          Refresh
+        </Button>
+      </div>
+      
+      {/* Overview Stats */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
+        <div className="bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl p-3 sm:p-4 text-white">
+          <Coins className="h-5 w-5 sm:h-6 sm:w-6 mb-1 sm:mb-2 opacity-80" />
+          <p className="text-lg sm:text-2xl font-bold">{totalStats.totalPoints.toLocaleString()}</p>
+          <p className="text-[10px] sm:text-sm opacity-80">Total Points</p>
+        </div>
+        <div className="bg-gradient-to-br from-blue-500 to-indigo-500 rounded-xl p-3 sm:p-4 text-white">
+          <Users className="h-5 w-5 sm:h-6 sm:w-6 mb-1 sm:mb-2 opacity-80" />
+          <p className="text-lg sm:text-2xl font-bold">{totalStats.totalUsers}</p>
+          <p className="text-[10px] sm:text-sm opacity-80">Members</p>
+        </div>
+        <div className="bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl p-3 sm:p-4 text-white">
+          <TrendingUp className="h-5 w-5 sm:h-6 sm:w-6 mb-1 sm:mb-2 opacity-80" />
+          <p className="text-lg sm:text-2xl font-bold">{referralStats.completedReferrals}</p>
+          <p className="text-[10px] sm:text-sm opacity-80">Referrals</p>
+        </div>
+        <div className="bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl p-3 sm:p-4 text-white">
+          <Gift className="h-5 w-5 sm:h-6 sm:w-6 mb-1 sm:mb-2 opacity-80" />
+          <p className="text-lg sm:text-2xl font-bold">{referralStats.totalPointsAwarded.toLocaleString()}</p>
+          <p className="text-[10px] sm:text-sm opacity-80">Points Given</p>
+        </div>
+      </div>
+
+      {/* Tier Distribution */}
+      <div className="grid grid-cols-4 gap-2 sm:gap-3 mb-4 sm:mb-6">
+        <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-lg sm:rounded-xl p-2 sm:p-3 text-center">
+          <Star className="h-4 w-4 sm:h-5 sm:w-5 text-amber-600 mx-auto mb-0.5 sm:mb-1" />
+          <p className="text-sm sm:text-xl font-bold text-amber-700 dark:text-amber-400">{totalStats.bronzeUsers}</p>
+          <p className="text-[8px] sm:text-xs text-amber-600 dark:text-amber-400">Bronze</p>
+        </div>
+        <div className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg sm:rounded-xl p-2 sm:p-3 text-center">
+          <Star className="h-4 w-4 sm:h-5 sm:w-5 text-gray-500 mx-auto mb-0.5 sm:mb-1" />
+          <p className="text-sm sm:text-xl font-bold text-gray-700 dark:text-gray-300">{totalStats.silverUsers}</p>
+          <p className="text-[8px] sm:text-xs text-gray-600 dark:text-gray-400">Silver</p>
+        </div>
+        <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded-lg sm:rounded-xl p-2 sm:p-3 text-center">
+          <Trophy className="h-4 w-4 sm:h-5 sm:w-5 text-yellow-600 mx-auto mb-0.5 sm:mb-1" />
+          <p className="text-sm sm:text-xl font-bold text-yellow-700 dark:text-yellow-400">{totalStats.goldUsers}</p>
+          <p className="text-[8px] sm:text-xs text-yellow-600 dark:text-yellow-400">Gold</p>
+        </div>
+        <div className="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-700 rounded-lg sm:rounded-xl p-2 sm:p-3 text-center">
+          <Crown className="h-4 w-4 sm:h-5 sm:w-5 text-purple-600 mx-auto mb-0.5 sm:mb-1" />
+          <p className="text-sm sm:text-xl font-bold text-purple-700 dark:text-purple-400">{totalStats.platinumUsers}</p>
+          <p className="text-[8px] sm:text-xs text-purple-600 dark:text-purple-400">Platinum</p>
+        </div>
+      </div>
+
+      <Tabs defaultValue="members" className="space-y-4">
+        <TabsList className="bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 w-full sm:w-auto">
+          <TabsTrigger
+            value="members"
+            className="data-[state=active]:bg-purple-500 data-[state=active]:text-white font-semibold text-xs sm:text-sm flex-1 sm:flex-none"
           >
-            <RefreshCw className="h-4 w-4 mr-1" />
-            Refresh
-          </Button>
-        </div>
-      </CardHeader>
-      <CardContent className="p-6">
-        {/* Overview Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          <div className="bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl p-4 text-white">
-            <Coins className="h-6 w-6 mb-2 opacity-80" />
-            <p className="text-2xl font-bold">{totalStats.totalPoints.toLocaleString()}</p>
-            <p className="text-sm opacity-80">Total Points Earned</p>
-          </div>
-          <div className="bg-gradient-to-br from-blue-500 to-indigo-500 rounded-xl p-4 text-white">
-            <Users className="h-6 w-6 mb-2 opacity-80" />
-            <p className="text-2xl font-bold">{totalStats.totalUsers}</p>
-            <p className="text-sm opacity-80">Loyalty Members</p>
-          </div>
-          <div className="bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl p-4 text-white">
-            <TrendingUp className="h-6 w-6 mb-2 opacity-80" />
-            <p className="text-2xl font-bold">{referralStats.completedReferrals}</p>
-            <p className="text-sm opacity-80">Successful Referrals</p>
-          </div>
-          <div className="bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl p-4 text-white">
-            <Gift className="h-6 w-6 mb-2 opacity-80" />
-            <p className="text-2xl font-bold">{referralStats.totalPointsAwarded.toLocaleString()}</p>
-            <p className="text-sm opacity-80">Referral Points Given</p>
-          </div>
-        </div>
+            <Users className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1" />
+            <span className="hidden sm:inline">Top</span> Members
+          </TabsTrigger>
+          <TabsTrigger
+            value="referrals"
+            className="data-[state=active]:bg-green-500 data-[state=active]:text-white font-semibold text-xs sm:text-sm flex-1 sm:flex-none"
+          >
+            <Gift className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1" />
+            Referrals
+          </TabsTrigger>
+        </TabsList>
 
-        {/* Tier Distribution */}
-        <div className="grid grid-cols-4 gap-3 mb-6">
-          <div className="bg-amber-50 border-2 border-amber-200 rounded-xl p-3 text-center">
-            <Star className="h-5 w-5 text-amber-600 mx-auto mb-1" />
-            <p className="text-xl font-bold text-amber-700">{totalStats.bronzeUsers}</p>
-            <p className="text-xs text-amber-600">Bronze</p>
-          </div>
-          <div className="bg-gray-50 border-2 border-gray-200 rounded-xl p-3 text-center">
-            <Star className="h-5 w-5 text-gray-500 dark:text-gray-400 mx-auto mb-1" />
-            <p className="text-xl font-bold text-gray-700 dark:text-gray-300">{totalStats.silverUsers}</p>
-            <p className="text-xs text-gray-600 dark:text-gray-400">Silver</p>
-          </div>
-          <div className="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-3 text-center">
-            <Trophy className="h-5 w-5 text-yellow-600 mx-auto mb-1" />
-            <p className="text-xl font-bold text-yellow-700">{totalStats.goldUsers}</p>
-            <p className="text-xs text-yellow-600">Gold</p>
-          </div>
-          <div className="bg-purple-50 border-2 border-purple-200 rounded-xl p-3 text-center">
-            <Crown className="h-5 w-5 text-purple-600 mx-auto mb-1" />
-            <p className="text-xl font-bold text-purple-700">{totalStats.platinumUsers}</p>
-            <p className="text-xs text-purple-600">Platinum</p>
-          </div>
-        </div>
-
-        <Tabs defaultValue="members" className="space-y-4">
-          <TabsList className="border-2 border-black bg-white">
-            <TabsTrigger
-              value="members"
-              className="data-[state=active]:bg-purple-500 data-[state=active]:text-white font-semibold"
-            >
-              <Users className="h-4 w-4 mr-1" />
-              Top Members
-            </TabsTrigger>
-            <TabsTrigger
-              value="referrals"
-              className="data-[state=active]:bg-green-500 data-[state=active]:text-white font-semibold"
-            >
-              <Gift className="h-4 w-4 mr-1" />
-              Referral Stats
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="members">
-            {isLoading ? (
-              <div className="text-center py-8">
-                <div className="w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
-                <p className="text-gray-500 dark:text-gray-400">Loading members...</p>
-              </div>
-            ) : loyaltyUsers.length === 0 ? (
-              <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-                <Users className="h-12 w-12 mx-auto mb-2 opacity-50" />
-                <p>No loyalty members yet</p>
-              </div>
-            ) : (
-              <div className="space-y-3 max-h-[400px] overflow-y-auto">
-                {loyaltyUsers.slice(0, 20).map((user, index) => (
-                  <div
-                    key={user.id}
-                    className="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-200"
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center font-bold text-purple-600">
-                        {index + 1}
-                      </div>
-                      <div>
-                        <p className="font-semibold">{user.userName}</p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">{user.userEmail}</p>
-                      </div>
+        <TabsContent value="members">
+          {isLoading ? (
+            <div className="text-center py-6 sm:py-8">
+              <div className="w-6 h-6 sm:w-8 sm:h-8 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
+              <p className="text-gray-500 dark:text-gray-400 text-sm">Loading members...</p>
+            </div>
+          ) : loyaltyUsers.length === 0 ? (
+            <div className="text-center py-6 sm:py-8 text-gray-500 dark:text-gray-400">
+              <Users className="h-10 w-10 sm:h-12 sm:w-12 mx-auto mb-2 opacity-50" />
+              <p className="text-sm">No loyalty members yet</p>
+            </div>
+          ) : (
+            <div className="space-y-2 sm:space-y-3 max-h-[350px] sm:max-h-[400px] overflow-y-auto">
+              {loyaltyUsers.slice(0, 20).map((user, index) => (
+                <div
+                  key={user.id}
+                  className="flex items-center justify-between p-3 sm:p-4 bg-gray-50 dark:bg-gray-800 rounded-lg sm:rounded-xl border border-gray-200 dark:border-gray-700"
+                >
+                  <div className="flex items-center gap-2 sm:gap-4 min-w-0">
+                    <div className="w-6 h-6 sm:w-8 sm:h-8 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center font-bold text-xs sm:text-sm text-purple-600 dark:text-purple-400 flex-shrink-0">
+                      {index + 1}
                     </div>
-                    <div className="flex items-center gap-4">
-                      <div className="text-right">
-                        <p className="font-bold text-purple-600">{user.lifetimePoints.toLocaleString()} pts</p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">Available: {user.totalPoints}</p>
-                      </div>
-                      {getTierBadge(user.tier)}
+                    <div className="min-w-0">
+                      <p className="font-semibold text-sm sm:text-base truncate">{user.userName}</p>
+                      <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 truncate">{user.userEmail}</p>
                     </div>
                   </div>
-                ))}
-              </div>
-            )}
-          </TabsContent>
+                  <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+                    <div className="text-right">
+                      <p className="font-bold text-xs sm:text-sm text-purple-600 dark:text-purple-400">{user.lifetimePoints.toLocaleString()}</p>
+                      <p className="text-[8px] sm:text-xs text-gray-500 dark:text-gray-400">Avail: {user.totalPoints}</p>
+                    </div>
+                    <div className="hidden sm:block">{getTierBadge(user.tier)}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </TabsContent>
 
-          <TabsContent value="referrals">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-6 text-center">
-                <p className="text-4xl font-bold text-blue-600">{referralStats.totalReferrals}</p>
-                <p className="text-sm text-blue-700 mt-1">Total Referrals</p>
-              </div>
-              <div className="bg-green-50 border-2 border-green-200 rounded-xl p-6 text-center">
-                <p className="text-4xl font-bold text-green-600">{referralStats.completedReferrals}</p>
-                <p className="text-sm text-green-700 mt-1">Completed</p>
-              </div>
-              <div className="bg-amber-50 border-2 border-amber-200 rounded-xl p-6 text-center">
-                <p className="text-4xl font-bold text-amber-600">{referralStats.pendingReferrals}</p>
-                <p className="text-sm text-amber-700 mt-1">Pending</p>
-              </div>
+        <TabsContent value="referrals">
+          <div className="grid grid-cols-3 gap-2 sm:gap-4">
+            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg sm:rounded-xl p-3 sm:p-6 text-center">
+              <p className="text-xl sm:text-4xl font-bold text-blue-600 dark:text-blue-400">{referralStats.totalReferrals}</p>
+              <p className="text-[10px] sm:text-sm text-blue-700 dark:text-blue-300 mt-1">Total</p>
             </div>
-            <div className="mt-6 p-4 bg-gray-50 rounded-xl">
-              <h4 className="font-semibold mb-2">Referral Program Details</h4>
-              <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                <li>• Referrer earns <span className="font-semibold text-purple-600">100 points</span> when friend makes first purchase</li>
-                <li>• Referred user gets <span className="font-semibold text-pink-600">50 bonus points</span></li>
-                <li>• No limit on number of referrals</li>
-              </ul>
+            <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-lg sm:rounded-xl p-3 sm:p-6 text-center">
+              <p className="text-xl sm:text-4xl font-bold text-green-600 dark:text-green-400">{referralStats.completedReferrals}</p>
+              <p className="text-[10px] sm:text-sm text-green-700 dark:text-green-300 mt-1">Done</p>
             </div>
-          </TabsContent>
-        </Tabs>
-      </CardContent>
-    </Card>
+            <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-lg sm:rounded-xl p-3 sm:p-6 text-center">
+              <p className="text-xl sm:text-4xl font-bold text-amber-600 dark:text-amber-400">{referralStats.pendingReferrals}</p>
+              <p className="text-[10px] sm:text-sm text-amber-700 dark:text-amber-300 mt-1">Pending</p>
+            </div>
+          </div>
+          <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-gray-50 dark:bg-gray-800 rounded-lg sm:rounded-xl border border-gray-200 dark:border-gray-700">
+            <h4 className="font-semibold text-sm sm:text-base mb-2">Program Details</h4>
+            <ul className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 space-y-1">
+              <li>• Referrer earns <span className="font-semibold text-purple-600">100 pts</span></li>
+              <li>• Referred gets <span className="font-semibold text-pink-600">50 pts</span></li>
+              <li>• Unlimited referrals</li>
+            </ul>
+          </div>
+        </TabsContent>
+      </Tabs>
+    </div>
   );
 }
