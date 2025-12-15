@@ -121,7 +121,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               email: newProfile.email,
               full_name: newProfile.full_name || userName,
               role: newProfile.role,
-              avatar_url: newProfile.avatar_url,
             });
           }
         }
@@ -143,7 +142,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           email: data.email,
           full_name: data.full_name || data.name,
           role: data.role,
-          avatar_url: data.avatar_url,
         });
       }
       setIsLoading(false);

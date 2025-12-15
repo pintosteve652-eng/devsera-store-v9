@@ -36,7 +36,7 @@ export function useOrders() {
       if (error) throw error;
 
       setOrders(
-        data.map((o) => ({
+        data.map((o: any) => ({
           id: o.id,
           userId: o.user_id,
           productId: o.product_id,
@@ -44,7 +44,7 @@ export function useOrders() {
           totalAmount: o.total_amount || undefined,
           paymentScreenshot: o.payment_screenshot || undefined,
           userProvidedInput: o.user_provided_input || undefined,
-          credentials: o.credentials || undefined,
+          credentials: (o.credentials as OrderCredentials) || undefined,
           cancellationReason: o.cancellation_reason || undefined,
           createdAt: o.created_at,
           updatedAt: o.updated_at,
@@ -230,7 +230,7 @@ export function useAdminOrders() {
       if (error) throw error;
 
       setOrders(
-        data.map((o) => ({
+        data.map((o: any) => ({
           id: o.id,
           userId: o.user_id,
           productId: o.product_id,
@@ -238,7 +238,7 @@ export function useAdminOrders() {
           totalAmount: o.total_amount || undefined,
           paymentScreenshot: o.payment_screenshot || undefined,
           userProvidedInput: o.user_provided_input || undefined,
-          credentials: o.credentials || undefined,
+          credentials: (o.credentials as OrderCredentials) || undefined,
           cancellationReason: o.cancellation_reason || undefined,
           createdAt: o.created_at,
           updatedAt: o.updated_at,
@@ -285,8 +285,8 @@ export function useAdminOrders() {
       .from('orders')
       .update({
         status: 'COMPLETED',
-        credentials,
-      })
+        credentials: JSON.parse(JSON.stringify(credentials)),
+      } as any)
       .eq('id', orderId);
 
     if (error) throw error;
@@ -309,9 +309,8 @@ export function useAdminOrders() {
           .select('id')
           .eq('product_id', orderData.product_id)
           .eq('status', 'AVAILABLE')
-          .is('variant_id', orderData.variant_id || null)
           .limit(1)
-          .single();
+          .maybeSingle();
 
         if (availableKey) {
           await supabase
@@ -329,7 +328,7 @@ export function useAdminOrders() {
 
     // Award loyalty points (10 points per ₹100 spent)
     if (orderData?.user_id && orderData?.products?.sale_price) {
-      const pointsEarned = Math.floor(parseFloat(orderData.products.sale_price) / 10);
+      const pointsEarned = Math.floor(Number(orderData.products.sale_price) / 10);
       
       if (pointsEarned > 0) {
         // Add point transaction

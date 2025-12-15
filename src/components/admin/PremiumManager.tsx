@@ -576,7 +576,7 @@ export default function PremiumManager() {
                 </div>
               )}
 
-              {(selectedMembership.status === 'rejected' || selectedMembership.status === 'revoked' || selectedMembership.status === 'expired') && (
+              {(selectedMembership.status === 'rejected' || selectedMembership.status === 'expired') && (
                 <div className="border-t pt-4">
                   <Button
                     variant="outline"

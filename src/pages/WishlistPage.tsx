@@ -192,18 +192,11 @@ export function WishlistPage() {
           </div>
         ) : (
           <EmptyState
-            icon={<Heart className="h-16 w-16 text-pink-300 dark:text-pink-700" />}
+            type="wishlist"
             title="Your wishlist is empty"
             description="Save products you love by clicking the heart icon. They'll appear here for easy access."
-            action={
-              <Button 
-                onClick={() => navigate('/')}
-                className="bg-pink-500 hover:bg-pink-600 text-white"
-              >
-                <ShoppingBag className="h-4 w-4 mr-2" />
-                Browse Products
-              </Button>
-            }
+            actionLabel="Browse Products"
+            onAction={() => navigate('/')}
           />
         )}
       </div>

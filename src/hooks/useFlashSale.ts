@@ -66,7 +66,7 @@ export function useFlashSale() {
         }
         
         if (data?.flash_sale_config) {
-          setConfig(data.flash_sale_config as FlashSaleConfig);
+          setConfig(data.flash_sale_config as unknown as FlashSaleConfig);
           // Also sync to localStorage for components that read from there
           localStorage.setItem(FLASH_SALE_STORAGE_KEY, JSON.stringify(data.flash_sale_config));
         } else {
@@ -106,9 +106,9 @@ export function useFlashSale() {
           const { error: updateError } = await supabase
             .from('settings')
             .update({ 
-              flash_sale_config: newConfig,
+              flash_sale_config: JSON.parse(JSON.stringify(newConfig)),
               updated_at: new Date().toISOString()
-            })
+            } as any)
             .eq('id', existingSettings.id);
 
           if (updateError) {
@@ -120,13 +120,13 @@ export function useFlashSale() {
           const { error: insertError } = await supabase
             .from('settings')
             .insert({
-              flash_sale_config: newConfig,
+              flash_sale_config: newConfig as unknown as Record<string, unknown>,
               upi_id: '',
               qr_code_url: '',
               telegram_link: '',
               contact_email: '',
               contact_phone: ''
-            });
+            } as any);
 
           if (insertError) {
             console.error('Error inserting flash sale config:', insertError);

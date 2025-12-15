@@ -113,8 +113,7 @@ export function StockUsageManager() {
           .select(`
             id,
             created_at,
-            quantity,
-            profile:profiles(email)
+            user_id
           `)
           .eq('product_id', product.id)
           .eq('status', 'COMPLETED')
@@ -131,11 +130,11 @@ export function StockUsageManager() {
           availableStock: available,
           usagePercentage: total > 0 ? Math.round((used / total) * 100) : 0,
           useManualStock: product.useManualStock || false,
-          recentSales: (recentOrders || []).map(o => ({
+          recentSales: (recentOrders || []).map((o: any) => ({
             orderId: o.id,
             date: o.created_at,
-            quantity: o.quantity || 1,
-            customerEmail: (o.profile as any)?.email || 'Unknown',
+            quantity: 1,
+            customerEmail: 'Customer',
           })),
         });
       }

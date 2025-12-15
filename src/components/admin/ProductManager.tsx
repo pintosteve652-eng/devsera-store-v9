@@ -439,20 +439,20 @@ export function ProductManager() {
       .order('created_at', { ascending: false });
     
     if (!error && data) {
-      setStockKeys(data.map(k => ({
+      setStockKeys(data.map((k: any) => ({
         id: k.id,
-        productId: k.product_id,
+        productId: k.product_id || '',
         variantId: k.variant_id,
-        keyType: k.key_type,
-        keyValue: k.key_value,
+        keyType: (k.key_type as 'LICENSE_KEY' | 'CREDENTIALS' | 'COUPON_CODE') || 'LICENSE_KEY',
+        keyValue: k.key_value || k.key_data || '',
         username: k.username,
         password: k.password,
         additionalData: k.additional_data,
-        status: k.status,
+        status: (k.status as 'AVAILABLE' | 'ASSIGNED' | 'EXPIRED' | 'REVOKED') || 'AVAILABLE',
         assignedOrderId: k.assigned_order_id,
         expiryDate: k.expiry_date,
         createdAt: k.created_at,
-        updatedAt: k.updated_at
+        updatedAt: k.used_at || k.created_at
       })));
     }
   };
@@ -468,6 +468,7 @@ export function ProductManager() {
       .insert({
         product_id: selectedProductForStock.id,
         key_type: keyType,
+        key_data: newStockKey.keyValue.trim(),
         key_value: newStockKey.keyValue.trim(),
         username: newStockKey.username.trim() || null,
         password: newStockKey.password.trim() || null,
@@ -500,6 +501,7 @@ export function ProductManager() {
         return {
           product_id: selectedProductForStock.id,
           key_type: keyType,
+          key_data: username, // Required field
           key_value: username, // Use username as key_value for credentials
           username: username,
           password: password,
@@ -508,10 +510,12 @@ export function ProductManager() {
       } else {
         // For keys/codes, use comma separator
         const parts = line.split(',').map(p => p.trim());
+        const keyValue = parts[0] || '';
         return {
           product_id: selectedProductForStock.id,
           key_type: keyType,
-          key_value: parts[0] || '',
+          key_data: keyValue, // Required field
+          key_value: keyValue,
           username: parts[1] || null,
           password: parts[2] || null,
           status: 'AVAILABLE'

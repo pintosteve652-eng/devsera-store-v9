@@ -45,24 +45,26 @@ export function useBundles() {
       if (error) throw error;
 
       setBundles(
-        data.map((b) => ({
+        data.map((b: any) => ({
           id: b.id,
           name: b.name,
           description: b.description || '',
-          originalPrice: parseFloat(b.original_price),
-          salePrice: parseFloat(b.sale_price),
+          originalPrice: Number(b.original_price) || 0,
+          salePrice: Number(b.sale_price) || 0,
           imageUrl: b.image_url || '',
           isActive: b.is_active,
           validUntil: b.valid_until,
           products: b.bundle_products?.map((bp: any) => ({
-            id: bp.product.id,
-            name: bp.product.name,
-            description: bp.product.description,
-            originalPrice: parseFloat(bp.product.original_price),
-            salePrice: parseFloat(bp.product.sale_price),
-            imageUrl: bp.product.image_url,
-            category: bp.product.category,
-            deliveryType: bp.product.delivery_type,
+            id: bp.product?.id || '',
+            name: bp.product?.name || '',
+            description: bp.product?.description || '',
+            image: bp.product?.image || bp.product?.image_url || '',
+            originalPrice: Number(bp.product?.original_price) || 0,
+            salePrice: Number(bp.product?.sale_price) || 0,
+            duration: bp.product?.duration || '1 Month',
+            features: bp.product?.features || [],
+            category: bp.product?.category || '',
+            deliveryType: bp.product?.delivery_type || 'CREDENTIALS',
           })) || [],
           createdAt: b.created_at,
         }))
@@ -106,24 +108,26 @@ export function useAdminBundles() {
       if (error) throw error;
 
       setBundles(
-        data.map((b) => ({
+        data.map((b: any) => ({
           id: b.id,
           name: b.name,
           description: b.description || '',
-          originalPrice: parseFloat(b.original_price),
-          salePrice: parseFloat(b.sale_price),
+          originalPrice: Number(b.original_price) || 0,
+          salePrice: Number(b.sale_price) || 0,
           imageUrl: b.image_url || '',
           isActive: b.is_active,
           validUntil: b.valid_until,
           products: b.bundle_products?.map((bp: any) => ({
-            id: bp.product.id,
-            name: bp.product.name,
-            description: bp.product.description,
-            originalPrice: parseFloat(bp.product.original_price),
-            salePrice: parseFloat(bp.product.sale_price),
-            imageUrl: bp.product.image_url,
-            category: bp.product.category,
-            deliveryType: bp.product.delivery_type,
+            id: bp.product?.id || '',
+            name: bp.product?.name || '',
+            description: bp.product?.description || '',
+            image: bp.product?.image || bp.product?.image_url || '',
+            originalPrice: Number(bp.product?.original_price) || 0,
+            salePrice: Number(bp.product?.sale_price) || 0,
+            duration: bp.product?.duration || '1 Month',
+            features: bp.product?.features || [],
+            category: bp.product?.category || '',
+            deliveryType: bp.product?.delivery_type || 'CREDENTIALS',
           })) || [],
           createdAt: b.created_at,
         }))

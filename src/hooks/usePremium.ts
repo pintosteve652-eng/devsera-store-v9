@@ -69,7 +69,7 @@ export function usePremium() {
   const fetchAllMemberships = useCallback(async () => {
     const { data, error } = await supabase
       .from('premium_memberships')
-      .select('*, profiles:user_id(id, email, name, full_name)')
+      .select('*')
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -77,21 +77,37 @@ export function usePremium() {
       return;
     }
 
-    setAllMemberships(data || []);
-    setPendingRequests(data?.filter(m => m.status === 'pending') || []);
+    // Fetch profiles separately to avoid relationship issues
+    const membershipsWithProfiles = await Promise.all(
+      (data || []).map(async (m) => {
+        const { data: profileData } = await supabase
+          .from('profiles')
+          .select('id, email, name, full_name')
+          .eq('id', m.user_id)
+          .single();
+        
+        return {
+          ...m,
+          profiles: profileData || undefined,
+        } as PremiumMembership;
+      })
+    );
+
+    setAllMemberships(membershipsWithProfiles);
+    setPendingRequests(membershipsWithProfiles.filter(m => m.status === 'pending'));
   }, []);
 
   const fetchPremiumProducts = useCallback(async () => {
     const { data, error } = await supabase
       .from('premium_products')
-      .select('*, products(*)');
+      .select('*');
 
     if (error) {
       console.error('Error fetching premium products:', error);
       return;
     }
 
-    setPremiumProducts(data || []);
+    setPremiumProducts(data as any || []);
   }, []);
 
   const fetchPremiumContent = useCallback(async () => {
@@ -177,10 +193,9 @@ export function usePremium() {
     const { error } = await supabase
       .from('premium_memberships')
       .update({
-        status: 'revoked',
-        revoked_at: new Date().toISOString(),
-        revoke_reason: reason,
-      })
+        status: 'expired',
+        notes: `Revoked: ${reason}`,
+      } as any)
       .eq('id', membershipId);
 
     if (error) throw error;
