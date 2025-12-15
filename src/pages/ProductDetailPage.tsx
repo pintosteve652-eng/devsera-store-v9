@@ -16,7 +16,7 @@ import { Badge } from '@/components/ui/badge';
 import { getFlashSaleInfoFromStorage } from '@/hooks/useFlashSale';
 import { usePremium } from '@/hooks/usePremium';
 
-const deliveryTypeInfo: Record<DeliveryType, { label: string; icon: React.ReactNode; description: string; color: string; userAction: string }> = {
+const deliveryTypeInfo: Record<string, { label: string; icon: React.ReactNode; description: string; color: string; userAction: string }> = {
   CREDENTIALS: {
     label: 'Login Credentials',
     icon: <Key className="h-5 w-5" />,
@@ -44,6 +44,13 @@ const deliveryTypeInfo: Record<DeliveryType, { label: string; icon: React.ReactN
     description: 'Your license key will be delivered instantly after payment',
     color: 'bg-amber-50 border-amber-200 text-amber-700 dark:bg-amber-900/30 dark:border-amber-700 dark:text-amber-300',
     userAction: 'After payment verification, your key will be delivered automatically'
+  },
+  MANUAL: {
+    label: 'Manual Delivery',
+    icon: <UserCheck className="h-5 w-5" />,
+    description: 'Product will be delivered manually by our team',
+    color: 'bg-gray-50 border-gray-200 text-gray-700 dark:bg-gray-900/30 dark:border-gray-700 dark:text-gray-300',
+    userAction: 'Our team will contact you with delivery details after purchase'
   }
 };
 
@@ -486,9 +493,9 @@ export function ProductDetailPage() {
             {/* Delivery Type Info - Use variant's delivery type if selected */}
             {(() => {
               const effectiveDeliveryType = selectedVariant?.deliveryType || product.deliveryType;
-              const customUserSees = (product as any).customUserSeesLabel; // Step 2: Customer Requirements (before purchase)
-              const postPurchaseInstructions = product.deliveryInstructions; // Step 4: Post-Purchase Instructions
-              return effectiveDeliveryType && (
+              const customerRequirementMessage = product.customUserSeesLabel; // Customer Requirements Message (before purchase)
+              const postPurchaseInstructions = product.deliveryInstructions; // Post-Purchase Message
+              return effectiveDeliveryType && deliveryTypeInfo[effectiveDeliveryType] && (
                 <div className={`rounded-2xl overflow-hidden border ${deliveryTypeInfo[effectiveDeliveryType].color} shadow-sm`}>
                   <div className="p-4 sm:p-5">
                     <div className="flex items-center gap-3 mb-3">
@@ -510,7 +517,7 @@ export function ProductDetailPage() {
                   <div className="bg-white/50 dark:bg-black/20 p-3 sm:p-4 border-t border-current/10">
                     <p className="text-[10px] sm:text-xs md:text-sm font-medium flex items-start gap-2.5">
                       <span className="text-base sm:text-lg leading-none flex-shrink-0">📋</span>
-                      <span className="whitespace-pre-wrap">{customUserSees || deliveryTypeInfo[effectiveDeliveryType].userAction}</span>
+                      <span className="whitespace-pre-wrap">{customerRequirementMessage || deliveryTypeInfo[effectiveDeliveryType].userAction}</span>
                     </p>
                   </div>
                   
