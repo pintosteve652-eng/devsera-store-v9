@@ -17,6 +17,7 @@ import { CheckoutPage } from '@/pages/CheckoutPage';
 import { OrdersPage } from '@/pages/OrdersPage';
 import { CommunityPage } from '@/pages/CommunityPage';
 import { BundleOffersPage } from '@/pages/BundleOffersPage';
+import { BundleCheckoutPage } from '@/pages/BundleCheckoutPage';
 import { ContactPage } from '@/pages/ContactPage';
 import { SupportPage } from '@/pages/SupportPage';
 import { RewardsPage } from '@/pages/RewardsPage';
@@ -118,6 +119,7 @@ function AppRoutes() {
         <Route path="/product/:id" element={<ProtectedRoute><ProductDetailPage /></ProtectedRoute>} />
         <Route path="/community" element={<ProtectedRoute><CommunityPage /></ProtectedRoute>} />
         <Route path="/bundles" element={<ProtectedRoute><BundleOffersPage /></ProtectedRoute>} />
+        <Route path="/bundle-checkout" element={<ProtectedRoute><BundleCheckoutPage /></ProtectedRoute>} />
         <Route path="/contact" element={<ProtectedRoute><ContactPage /></ProtectedRoute>} />
         <Route path="/support" element={<ProtectedRoute><SupportPage /></ProtectedRoute>} />
         <Route path="/rewards" element={<ProtectedRoute><RewardsPage /></ProtectedRoute>} />
