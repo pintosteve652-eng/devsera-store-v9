@@ -120,7 +120,7 @@ export function useProduct(id: string) {
         .from('products')
         .select('*')
         .eq('id', id)
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
 

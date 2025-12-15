@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useProduct } from '@/hooks/useProducts';
 import { useSettings } from '@/hooks/useSettings';
 import { useReviews } from '@/hooks/useReviews';
-import { mockProducts, mockReviews } from '@/data/mockData';
+
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { useAuth } from '@/contexts/AuthContext';
@@ -70,9 +70,9 @@ export function ProductDetailPage() {
   const [selectedVariantId, setSelectedVariantId] = useState<string | null>(null);
   const [flashSaleInfo, setFlashSaleInfo] = useState({ isOnFlashSale: false, discountAmount: 0 });
 
-  // Use mock data if Supabase is not configured
-  const product = isSupabaseConfigured && dbProduct ? dbProduct : mockProducts.find(p => p.id === id);
-  const productReviews = isSupabaseConfigured && dbReviews.length > 0 ? dbReviews : mockReviews.filter(r => r.productId === id);
+  // Use DB data (no mock fallback when Supabase is configured)
+  const product = dbProduct;
+  const productReviews = dbReviews;
 
   // Fetch premium products for premium users
   useEffect(() => {
