@@ -8,9 +8,10 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { CheckCircle2, XCircle, Eye, Key, Package, UserCheck, Zap, User, Clock, AlertCircle, Mail, Trash2, RefreshCw, Database, Copy, Gift } from 'lucide-react';
+import { CheckCircle2, XCircle, Eye, Key, Package, UserCheck, Zap, User, Clock, AlertCircle, Mail, Trash2, RefreshCw, Database, Copy, Gift, Download } from 'lucide-react';
 import { Order, OrderCredentials, DeliveryType, OrderStatus } from '@/types';
 import { isSupabaseConfigured, supabase } from '@/lib/supabase';
+import { exportToCSV, orderColumns } from '@/utils/csvExport';
 
 const deliveryTypeLabels: Record<DeliveryType, { label: string; icon: React.ReactNode }> = {
   CREDENTIALS: { label: 'Login Credentials', icon: <Key className="h-4 w-4" /> },
@@ -407,15 +408,37 @@ export function OrderVerificationPanel() {
     }
   };
 
+  const handleExport = () => {
+    if (filteredOrders.length === 0) {
+      toast({ title: 'No data to export', variant: 'destructive' });
+      return;
+    }
+    exportToCSV(filteredOrders, orderColumns, 'orders');
+    toast({ title: 'Exported!', description: `${filteredOrders.length} orders exported to CSV` });
+  };
+
   return (
     <div className="p-4 sm:p-6 lg:p-8">
-      <div className="mb-6 sm:mb-8">
-        <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-2">
-          Order Management
-        </h2>
-        <p className="text-gray-500 dark:text-gray-400 text-sm sm:text-base">
-          Review payment screenshots and approve or reject orders
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
+        <div>
+          <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-1 sm:mb-2">
+            Order Management
+          </h2>
+          <p className="text-gray-500 dark:text-gray-400 text-sm sm:text-base">
+            Review payment screenshots and approve or reject orders
+          </p>
+        </div>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={handleExport}
+          disabled={filteredOrders.length === 0}
+          className="h-9 gap-2"
+        >
+          <Download className="h-4 w-4" />
+          <span className="hidden sm:inline">Export Orders</span>
+          <span className="sm:hidden">Export</span>
+        </Button>
       </div>
 
       {/* Filter Tabs */}

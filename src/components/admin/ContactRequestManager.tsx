@@ -8,8 +8,9 @@ import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useToast } from '@/components/ui/use-toast';
-import { Mail, MessageCircle, Clock, CheckCircle, Trash2, Eye, Send, RefreshCw, Search } from 'lucide-react';
+import { Mail, MessageCircle, Clock, CheckCircle, Trash2, Eye, Send, RefreshCw, Search, Download } from 'lucide-react';
 import { format } from 'date-fns';
+import { exportToCSV, contactRequestColumns } from '@/utils/csvExport';
 
 interface ContactRequest {
   id: string;
@@ -149,6 +150,15 @@ export function ContactRequestManager() {
     return matchesSearch && matchesStatus;
   });
 
+  const handleExport = () => {
+    if (filteredRequests.length === 0) {
+      toast({ title: 'No data to export', variant: 'destructive' });
+      return;
+    }
+    exportToCSV(filteredRequests, contactRequestColumns, 'contact_requests');
+    toast({ title: 'Exported!', description: `${filteredRequests.length} requests exported to CSV` });
+  };
+
   const pendingCount = requests.filter(r => r.status === 'pending').length;
 
   return (
@@ -164,10 +174,16 @@ export function ContactRequestManager() {
               )}
             </CardTitle>
           </div>
-          <Button variant="outline" onClick={loadRequests} disabled={isLoading} className="rounded-xl">
-            <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
-            Refresh
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={handleExport} disabled={filteredRequests.length === 0} className="rounded-xl">
+              <Download className="h-4 w-4 mr-2" />
+              <span className="hidden sm:inline">Export</span>
+            </Button>
+            <Button variant="outline" onClick={loadRequests} disabled={isLoading} className="rounded-xl">
+              <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
+              <span className="hidden sm:inline">Refresh</span>
+            </Button>
+          </div>
         </div>
       </CardHeader>
       <CardContent className="p-4 sm:p-6">

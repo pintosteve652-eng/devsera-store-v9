@@ -2,11 +2,14 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Search, Users, Mail, Calendar } from 'lucide-react';
+import { Search, Users, Mail, Calendar, Download, RefreshCw } from 'lucide-react';
 import { isSupabaseConfigured, supabase } from '@/lib/supabase';
 import { useSettings } from '@/hooks/useSettings';
+import { exportToCSV, customerColumns } from '@/utils/csvExport';
+import { useToast } from '@/components/ui/use-toast';
 
 interface Customer {
   id: string;
@@ -60,6 +63,16 @@ export function CustomerManager() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const { settings } = useSettings();
+  const { toast } = useToast();
+
+  const handleExport = () => {
+    if (filteredCustomers.length === 0) {
+      toast({ title: 'No data to export', variant: 'destructive' });
+      return;
+    }
+    exportToCSV(filteredCustomers, customerColumns, 'customers');
+    toast({ title: 'Exported!', description: `${filteredCustomers.length} customers exported to CSV` });
+  };
 
   useEffect(() => {
     loadCustomers();
@@ -180,14 +193,25 @@ export function CustomerManager() {
             <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
               Customer List
             </h3>
-            <div className="relative w-full sm:w-72">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-              <Input
-                placeholder="Search customers..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 border border-gray-200 dark:border-gray-700 rounded-xl h-10 text-sm bg-white dark:bg-gray-800"
-              />
+            <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+              <div className="relative flex-1 sm:w-72">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Input
+                  placeholder="Search customers..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10 border border-gray-200 dark:border-gray-700 rounded-xl h-10 text-sm bg-white dark:bg-gray-800"
+                />
+              </div>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm" onClick={loadCustomers} className="h-10 px-3">
+                  <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
+                </Button>
+                <Button variant="outline" size="sm" onClick={handleExport} className="h-10 px-3 gap-1">
+                  <Download className="h-4 w-4" />
+                  <span className="hidden sm:inline">Export</span>
+                </Button>
+              </div>
             </div>
           </div>
         </div>
