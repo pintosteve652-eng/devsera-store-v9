@@ -308,6 +308,8 @@ export function ProductManager() {
         requiresUserInput: p.requires_user_input || false,
         userInputLabel: p.user_input_label || '',
         requiresPassword: p.requires_password !== false,
+        customRequirementsLabel: p.custom_requirements_label || '',
+        customUserSeesLabel: (p as any).customer_requirement_message || '',
         isActive: p.is_active !== false,
         hasVariants: p.has_variants || false,
         scheduledStart: p.scheduled_start || '',
@@ -618,7 +620,7 @@ export function ProductManager() {
 
     setIsSaving(true);
 
-    const productData = {
+    const productData: any = {
       name: editingProduct.name.trim(),
       description: editingProduct.description?.trim() || '',
       image: editingProduct.image?.trim() || 'https://images.unsplash.com/photo-1633419461186-7d40a38105ec?w=800&q=80',
@@ -633,6 +635,8 @@ export function ProductManager() {
       requires_user_input: editingProduct.requiresUserInput || false,
       user_input_label: editingProduct.userInputLabel?.trim() || '',
       requires_password: editingProduct.requiresPassword !== false,
+      custom_requirements_label: editingProduct.customRequirementsLabel?.trim() || null,
+      customer_requirement_message: editingProduct.customUserSeesLabel?.trim() || null,
       is_active: editingProduct.isActive !== false,
       has_variants: editingProduct.hasVariants || false,
       scheduled_start: editingProduct.scheduledStart || null,
