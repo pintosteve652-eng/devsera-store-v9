@@ -15,6 +15,8 @@ export interface BannerPost {
   display_order: number;
   start_date: string | null;
   end_date: string | null;
+  text_align_h: 'left' | 'center' | 'right';
+  text_align_v: 'top' | 'center' | 'bottom';
   created_at: string;
   updated_at: string;
 }
@@ -44,7 +46,11 @@ export function useBannerPosts() {
         .order('display_order', { ascending: true });
 
       if (error) throw error;
-      setBanners(data || []);
+      setBanners((data || []).map((b: any) => ({
+        ...b,
+        text_align_h: b.text_align_h || 'center',
+        text_align_v: b.text_align_v || 'center',
+      })));
     } catch (error) {
       console.error('Error loading banners:', error);
     } finally {
@@ -76,7 +82,11 @@ export function useAdminBannerPosts() {
         .order('display_order', { ascending: true });
 
       if (error) throw error;
-      setBanners(data || []);
+      setBanners((data || []).map((b: any) => ({
+        ...b,
+        text_align_h: b.text_align_h || 'center',
+        text_align_v: b.text_align_v || 'center',
+      })));
     } catch (error) {
       console.error('Error loading banners:', error);
     } finally {
@@ -102,7 +112,9 @@ export function useAdminBannerPosts() {
         display_order: banner.display_order || 0,
         start_date: banner.start_date,
         end_date: banner.end_date,
-      });
+        text_align_h: banner.text_align_h || 'center',
+        text_align_v: banner.text_align_v || 'center',
+      } as any);
 
     if (error) throw error;
     await loadAllBanners();
@@ -116,7 +128,7 @@ export function useAdminBannerPosts() {
       .update({
         ...updates,
         updated_at: new Date().toISOString(),
-      })
+      } as any)
       .eq('id', id);
 
     if (error) throw error;

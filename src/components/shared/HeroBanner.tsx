@@ -14,6 +14,8 @@ interface BannerSlide {
   gradient: string;
   icon: React.ReactNode;
   imageUrl?: string;
+  textAlignH: 'left' | 'center' | 'right';
+  textAlignV: 'top' | 'center' | 'bottom';
 }
 
 // Default slides as fallback
@@ -26,7 +28,9 @@ const defaultSlides: BannerSlide[] = [
     buttonText: 'Shop Now',
     buttonLink: '/',
     gradient: 'from-teal-600 via-teal-700 to-emerald-800',
-    icon: <Sparkles className="h-8 w-8" />
+    icon: <Sparkles className="h-8 w-8" />,
+    textAlignH: 'center',
+    textAlignV: 'center',
   },
   {
     id: '2',
@@ -36,7 +40,9 @@ const defaultSlides: BannerSlide[] = [
     buttonText: 'View Bundles',
     buttonLink: '/bundles',
     gradient: 'from-purple-600 via-pink-600 to-purple-800',
-    icon: <Gift className="h-8 w-8" />
+    icon: <Gift className="h-8 w-8" />,
+    textAlignH: 'center',
+    textAlignV: 'center',
   },
   {
     id: '3',
@@ -46,7 +52,9 @@ const defaultSlides: BannerSlide[] = [
     buttonText: 'Learn More',
     buttonLink: '/contact',
     gradient: 'from-amber-500 via-orange-500 to-red-600',
-    icon: <Clock className="h-8 w-8" />
+    icon: <Clock className="h-8 w-8" />,
+    textAlignH: 'center',
+    textAlignV: 'center',
   },
   {
     id: '4',
@@ -56,7 +64,9 @@ const defaultSlides: BannerSlide[] = [
     buttonText: 'Contact Support',
     buttonLink: '/support',
     gradient: 'from-blue-600 via-indigo-600 to-purple-700',
-    icon: <Shield className="h-8 w-8" />
+    icon: <Shield className="h-8 w-8" />,
+    textAlignH: 'center',
+    textAlignV: 'center',
   }
 ];
 
@@ -94,6 +104,8 @@ export function HeroBanner() {
       gradient: banner.gradient,
       icon: getIconFromType(banner.icon_type),
       imageUrl: banner.image_url || undefined,
+      textAlignH: banner.text_align_h || 'center',
+      textAlignV: banner.text_align_v || 'center',
     }));
   }, [banners]);
 
@@ -178,8 +190,14 @@ export function HeroBanner() {
         <div className="absolute -bottom-20 -right-20 w-40 h-40 md:w-60 md:h-60 bg-white/10 rounded-full blur-3xl animate-pulse delay-1000" />
       </div>
 
-      <div className="container mx-auto px-4 py-10 sm:py-14 md:py-18 lg:py-20 relative">
-        <div className="max-w-4xl mx-auto text-center">
+      <div className="container mx-auto px-4 py-10 sm:py-14 md:py-18 lg:py-20 relative h-full">
+        <div className={`max-w-4xl h-full flex flex-col ${
+          slide.textAlignV === 'top' ? 'justify-start pt-4' : 
+          slide.textAlignV === 'bottom' ? 'justify-end pb-4' : 'justify-center'
+        } ${
+          slide.textAlignH === 'left' ? 'items-start text-left mx-0' : 
+          slide.textAlignH === 'right' ? 'items-end text-right ml-auto mr-0' : 'items-center text-center mx-auto'
+        }`}>
           {/* Icon with Glow Effect */}
           <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 bg-white/20 backdrop-blur-sm rounded-2xl text-white mb-4 sm:mb-6 shadow-lg shadow-black/10 relative">
             <div className="absolute inset-0 bg-white/20 rounded-2xl animate-ping opacity-50" />
@@ -201,7 +219,7 @@ export function HeroBanner() {
           )}
           
           {slide.description && (
-            <p className="text-sm sm:text-base md:text-lg text-white/90 mb-6 sm:mb-8 max-w-2xl mx-auto px-4 leading-relaxed">
+            <p className="text-sm sm:text-base md:text-lg text-white/90 mb-6 sm:mb-8 max-w-2xl leading-relaxed px-4">
               {slide.description}
             </p>
           )}
