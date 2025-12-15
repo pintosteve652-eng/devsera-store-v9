@@ -1400,6 +1400,7 @@ export type Database = {
         Args: { p_product_id: string; p_variant_id?: string }
         Returns: number
       }
+      is_admin: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
       premium_content_type: "trick" | "guide" | "offer" | "resource"
