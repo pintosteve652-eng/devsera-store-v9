@@ -13,6 +13,7 @@ interface BannerSlide {
   buttonLink: string;
   gradient: string;
   icon: React.ReactNode;
+  imageUrl?: string;
 }
 
 // Default slides as fallback
@@ -92,6 +93,7 @@ export function HeroBanner() {
       buttonLink: banner.button_link,
       gradient: banner.gradient,
       icon: getIconFromType(banner.icon_type),
+      imageUrl: banner.image_url || undefined,
     }));
   }, [banners]);
 
@@ -148,7 +150,21 @@ export function HeroBanner() {
   const slide = bannerSlides[currentSlide] || bannerSlides[0];
 
   return (
-    <section className={`relative overflow-hidden bg-gradient-to-br ${slide.gradient} transition-all duration-700`}>
+    <section className={`relative overflow-hidden transition-all duration-700`}>
+      {/* Background Image or Gradient */}
+      {slide.imageUrl ? (
+        <>
+          <img 
+            src={slide.imageUrl} 
+            alt="" 
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+          <div className={`absolute inset-0 bg-gradient-to-br ${slide.gradient} opacity-60`} />
+        </>
+      ) : (
+        <div className={`absolute inset-0 bg-gradient-to-br ${slide.gradient}`} />
+      )}
+      
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute inset-0" style={{
