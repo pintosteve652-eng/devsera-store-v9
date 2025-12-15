@@ -147,6 +147,8 @@ export type Database = {
           is_active: boolean | null
           start_date: string | null
           subtitle: string | null
+          text_align_h: string | null
+          text_align_v: string | null
           title: string
           updated_at: string | null
         }
@@ -164,6 +166,8 @@ export type Database = {
           is_active?: boolean | null
           start_date?: string | null
           subtitle?: string | null
+          text_align_h?: string | null
+          text_align_v?: string | null
           title: string
           updated_at?: string | null
         }
@@ -181,6 +185,8 @@ export type Database = {
           is_active?: boolean | null
           start_date?: string | null
           subtitle?: string | null
+          text_align_h?: string | null
+          text_align_v?: string | null
           title?: string
           updated_at?: string | null
         }

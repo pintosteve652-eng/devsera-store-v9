@@ -209,8 +209,8 @@ export function BannerManager() {
       is_active: banner.is_active,
       start_date: banner.start_date ? banner.start_date.split('T')[0] : '',
       end_date: banner.end_date ? banner.end_date.split('T')[0] : '',
-      text_align_h: 'center',
-      text_align_v: 'center',
+      text_align_h: banner.text_align_h || 'center',
+      text_align_v: banner.text_align_v || 'center',
       overlay_opacity: 50,
       show_icon: true,
     });
