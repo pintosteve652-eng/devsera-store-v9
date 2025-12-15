@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/components/ui/use-toast';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { exportToCSV, ticketColumns } from '@/utils/csvExport';
 import { 
   Ticket, 
   RefreshCw, 
@@ -19,7 +20,8 @@ import {
   Mail,
   Calendar,
   AlertTriangle,
-  XCircle
+  XCircle,
+  Download
 } from 'lucide-react';
 
 export function TicketManager() {
@@ -119,6 +121,15 @@ export function TicketManager() {
     return true;
   });
 
+  const handleExport = () => {
+    if (filteredTickets.length === 0) {
+      toast({ title: 'No data to export', variant: 'destructive' });
+      return;
+    }
+    exportToCSV(filteredTickets, ticketColumns, 'support_tickets');
+    toast({ title: 'Exported!', description: `${filteredTickets.length} tickets exported to CSV` });
+  };
+
   return (
     <div className="p-4 sm:p-6 lg:p-8">
       <div className="flex flex-col gap-4 sm:gap-6 mb-6 sm:mb-8">
@@ -155,6 +166,16 @@ export function TicketManager() {
                 <SelectItem value="low">Low</SelectItem>
               </SelectContent>
             </Select>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleExport}
+              disabled={filteredTickets.length === 0}
+              className="border border-gray-200 dark:border-gray-700 rounded-xl h-10 px-3"
+            >
+              <Download className="h-4 w-4 sm:mr-2" />
+              <span className="hidden sm:inline">Export</span>
+            </Button>
             <Button
               variant="outline"
               size="sm"

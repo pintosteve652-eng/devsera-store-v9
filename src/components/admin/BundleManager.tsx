@@ -12,6 +12,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Checkbox } from '@/components/ui/checkbox';
 import { supabase } from '@/integrations/supabase/client';
+import { exportToCSV, bundleColumns } from '@/utils/csvExport';
 import { 
   Package, 
   Plus, 
@@ -21,7 +22,8 @@ import {
   Percent,
   Calendar,
   Upload,
-  Image as ImageIcon
+  Image as ImageIcon,
+  Download
 } from 'lucide-react';
 
 export function BundleManager() {
@@ -162,6 +164,15 @@ export function BundleManager() {
     return Math.round(((original - sale) / original) * 100);
   };
 
+  const handleExport = () => {
+    if (bundles.length === 0) {
+      toast({ title: 'No data to export', variant: 'destructive' });
+      return;
+    }
+    exportToCSV(bundles, bundleColumns, 'bundles');
+    toast({ title: 'Exported!', description: `${bundles.length} bundles exported to CSV` });
+  };
+
   return (
     <Card className="border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
       <CardHeader className="border-b-2 border-black bg-gradient-to-r from-purple-50 to-pink-50 p-3 sm:p-6">
@@ -171,6 +182,16 @@ export function BundleManager() {
             Bundle Offers
           </CardTitle>
           <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleExport}
+              disabled={bundles.length === 0}
+              className="border-2 border-black h-8 sm:h-9 px-2 sm:px-3"
+            >
+              <Download className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-1" />
+              <span className="hidden sm:inline">Export</span>
+            </Button>
             <Button
               variant="outline"
               size="sm"

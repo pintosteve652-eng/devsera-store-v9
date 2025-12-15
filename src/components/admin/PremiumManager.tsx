@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Crown, Check, X, Eye, Loader2, Search, Filter, Users, DollarSign, Clock, ChevronLeft, ChevronRight, ArrowUp, TrendingUp, Calendar, Image, Trash2, Ban, CalendarPlus } from 'lucide-react';
+import { Crown, Check, X, Eye, Loader2, Search, Filter, Users, DollarSign, Clock, ChevronLeft, ChevronRight, ArrowUp, TrendingUp, Calendar, Image, Trash2, Ban, CalendarPlus, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -13,6 +13,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { usePremium, PREMIUM_PLANS } from '@/hooks/usePremium';
 import { PremiumMembership } from '@/types';
+import { exportToCSV, premiumMembershipColumns } from '@/utils/csvExport';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -164,6 +165,15 @@ export default function PremiumManager() {
     }
   };
 
+  const handleExport = () => {
+    if (filteredMemberships.length === 0) {
+      toast({ title: 'No data to export', variant: 'destructive' });
+      return;
+    }
+    exportToCSV(filteredMemberships, premiumMembershipColumns, 'premium_memberships');
+    toast({ title: 'Exported!', description: `${filteredMemberships.length} memberships exported to CSV` });
+  };
+
   const filteredMemberships = allMemberships.filter(m => {
     const matchesSearch = 
       (m.profiles as any)?.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -281,19 +291,31 @@ export default function PremiumManager() {
             className="pl-10"
           />
         </div>
-        <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-full sm:w-40">
-            <Filter className="h-4 w-4 mr-2" />
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Status</SelectItem>
-            <SelectItem value="pending">Pending</SelectItem>
-            <SelectItem value="approved">Approved</SelectItem>
-            <SelectItem value="rejected">Rejected</SelectItem>
-            <SelectItem value="expired">Expired</SelectItem>
-          </SelectContent>
-        </Select>
+        <div className="flex gap-2">
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="w-full sm:w-40">
+              <Filter className="h-4 w-4 mr-2" />
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Status</SelectItem>
+              <SelectItem value="pending">Pending</SelectItem>
+              <SelectItem value="approved">Approved</SelectItem>
+              <SelectItem value="rejected">Rejected</SelectItem>
+              <SelectItem value="expired">Expired</SelectItem>
+            </SelectContent>
+          </Select>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={handleExport}
+            disabled={filteredMemberships.length === 0}
+            className="h-10"
+          >
+            <Download className="h-4 w-4 sm:mr-2" />
+            <span className="hidden sm:inline">Export</span>
+          </Button>
+        </div>
       </div>
 
       {/* Pending Requests Alert */}

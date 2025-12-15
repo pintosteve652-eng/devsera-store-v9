@@ -13,7 +13,9 @@ import {
   Star,
   RefreshCw,
   TrendingUp,
+  Download,
 } from 'lucide-react';
+import { exportToCSV, loyaltyColumns } from '@/utils/csvExport';
 
 interface LoyaltyUser {
   id: string;
@@ -138,6 +140,15 @@ export function RewardsManager() {
     );
   };
 
+  const handleExport = () => {
+    if (loyaltyUsers.length === 0) {
+      toast({ title: 'No data to export', variant: 'destructive' });
+      return;
+    }
+    exportToCSV(loyaltyUsers, loyaltyColumns, 'loyalty_members');
+    toast({ title: 'Exported!', description: `${loyaltyUsers.length} members exported to CSV` });
+  };
+
   return (
     <div className="p-3 sm:p-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 sm:mb-6">
@@ -145,15 +156,27 @@ export function RewardsManager() {
           <Gift className="h-5 w-5" />
           Rewards & Referrals
         </h2>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={loadData}
-          className="border border-gray-200 dark:border-gray-700 h-9"
-        >
-          <RefreshCw className="h-4 w-4 mr-1" />
-          Refresh
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleExport}
+            disabled={loyaltyUsers.length === 0}
+            className="border border-gray-200 dark:border-gray-700 h-9"
+          >
+            <Download className="h-4 w-4 mr-1" />
+            <span className="hidden sm:inline">Export</span>
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={loadData}
+            className="border border-gray-200 dark:border-gray-700 h-9"
+          >
+            <RefreshCw className="h-4 w-4 mr-1" />
+            <span className="hidden sm:inline">Refresh</span>
+          </Button>
+        </div>
       </div>
       
       {/* Overview Stats */}

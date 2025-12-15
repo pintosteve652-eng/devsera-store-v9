@@ -14,9 +14,11 @@ import {
   Heart,
   CheckCircle,
   XCircle,
-  Users
+  Users,
+  Download
 } from 'lucide-react';
 import { useAllReviews } from '@/hooks/useReviews';
+import { exportToCSV } from '@/utils/csvExport';
 
 interface CommunityPost {
   id: string;
@@ -130,6 +132,24 @@ export function CommunityManager() {
     }
   };
 
+  const handleExportReviews = () => {
+    if (reviews.length === 0) {
+      toast({ title: 'No data to export', variant: 'destructive' });
+      return;
+    }
+    const reviewColumns = [
+      { header: 'ID', accessor: 'id' as const },
+      { header: 'User', accessor: 'userName' as const },
+      { header: 'Product', accessor: 'productName' as const },
+      { header: 'Rating', accessor: 'rating' as const },
+      { header: 'Comment', accessor: 'comment' as const },
+      { header: 'Verified', accessor: (r: any) => r.verified ? 'Yes' : 'No' },
+      { header: 'Created At', accessor: (r: any) => new Date(r.createdAt).toLocaleString() },
+    ];
+    exportToCSV(reviews, reviewColumns, 'reviews');
+    toast({ title: 'Exported!', description: `${reviews.length} reviews exported to CSV` });
+  };
+
   const formatTimeAgo = (dateString: string) => {
     const date = new Date(dateString);
     const now = new Date();
@@ -145,7 +165,7 @@ export function CommunityManager() {
   return (
     <Card className="border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
       <CardHeader className="border-b-2 border-black bg-gradient-to-r from-purple-50 to-pink-50">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <CardTitle className="flex items-center gap-2">
             <Users className="h-5 w-5" />
             Community Management
@@ -154,11 +174,21 @@ export function CommunityManager() {
             <Button
               variant="outline"
               size="sm"
+              onClick={handleExportReviews}
+              disabled={reviews.length === 0}
+              className="border-2 border-black"
+            >
+              <Download className="h-4 w-4 mr-1" />
+              <span className="hidden sm:inline">Export</span>
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
               onClick={() => { loadPosts(); refetchReviews(); }}
               className="border-2 border-black"
             >
               <RefreshCw className="h-4 w-4 mr-1" />
-              Refresh
+              <span className="hidden sm:inline">Refresh</span>
             </Button>
           </div>
         </div>
