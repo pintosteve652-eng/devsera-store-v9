@@ -556,6 +556,7 @@ export type Database = {
       }
       orders: {
         Row: {
+          bundle_id: string | null
           cancellation_reason: string | null
           created_at: string
           credentials: Json | null
@@ -569,6 +570,7 @@ export type Database = {
           variant_id: string | null
         }
         Insert: {
+          bundle_id?: string | null
           cancellation_reason?: string | null
           created_at?: string
           credentials?: Json | null
@@ -582,6 +584,7 @@ export type Database = {
           variant_id?: string | null
         }
         Update: {
+          bundle_id?: string | null
           cancellation_reason?: string | null
           created_at?: string
           credentials?: Json | null
@@ -595,6 +598,13 @@ export type Database = {
           variant_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "orders_bundle_id_fkey"
+            columns: ["bundle_id"]
+            isOneToOne: false
+            referencedRelation: "bundles"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "orders_product_id_fkey"
             columns: ["product_id"]

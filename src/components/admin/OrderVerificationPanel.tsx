@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { CheckCircle2, XCircle, Eye, Key, Package, UserCheck, Zap, User, Clock, AlertCircle, Mail, Trash2, RefreshCw, Database, Copy } from 'lucide-react';
+import { CheckCircle2, XCircle, Eye, Key, Package, UserCheck, Zap, User, Clock, AlertCircle, Mail, Trash2, RefreshCw, Database, Copy, Gift } from 'lucide-react';
 import { Order, OrderCredentials, DeliveryType, OrderStatus } from '@/types';
 import { isSupabaseConfigured, supabase } from '@/lib/supabase';
 
@@ -21,7 +21,7 @@ const deliveryTypeLabels: Record<DeliveryType, { label: string; icon: React.Reac
 
 export function OrderVerificationPanel() {
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
-  const [filterStatus, setFilterStatus] = useState<OrderStatus | 'ALL'>('SUBMITTED');
+  const [filterStatus, setFilterStatus] = useState<OrderStatus | 'ALL' | 'BUNDLE'>('SUBMITTED');
   const [credentials, setCredentials] = useState<OrderCredentials>({
     username: '',
     password: '',
@@ -135,9 +135,12 @@ export function OrderVerificationPanel() {
 
   const filteredOrders = filterStatus === 'ALL' 
     ? orders 
+    : filterStatus === 'BUNDLE'
+    ? orders.filter(o => o.bundleId)
     : orders.filter(o => o.status === filterStatus);
   
   const submittedOrders = orders.filter(o => o.status === 'SUBMITTED');
+  const bundleOrders = orders.filter(o => o.bundleId);
 
   const getDeliveryType = (order: Order): DeliveryType => {
     return order.product?.deliveryType || 'CREDENTIALS';
@@ -417,11 +420,15 @@ export function OrderVerificationPanel() {
 
       {/* Filter Tabs */}
       <div className="mb-6 sm:mb-8 overflow-x-auto pb-2 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-        <Tabs value={filterStatus} onValueChange={(v) => setFilterStatus(v as OrderStatus | 'ALL')}>
+        <Tabs value={filterStatus} onValueChange={(v) => setFilterStatus(v as OrderStatus | 'ALL' | 'BUNDLE')}>
           <TabsList className="bg-gray-100 dark:bg-gray-700/50 border border-gray-200/80 dark:border-gray-600/50 rounded-xl p-1.5 inline-flex min-w-max gap-1.5">
             <TabsTrigger value="SUBMITTED" className="rounded-lg data-[state=active]:bg-blue-500 data-[state=active]:text-white data-[state=active]:shadow-md px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-medium transition-all">
               <AlertCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
               <span className="hidden sm:inline">Pending</span> ({submittedOrders.length})
+            </TabsTrigger>
+            <TabsTrigger value="BUNDLE" className="rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-md px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-medium transition-all">
+              <Gift className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
+              <span className="hidden sm:inline">Bundles</span> ({bundleOrders.length})
             </TabsTrigger>
             <TabsTrigger value="ALL" className="rounded-lg data-[state=active]:bg-gray-900 dark:data-[state=active]:bg-gray-600 data-[state=active]:text-white data-[state=active]:shadow-md px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-medium transition-all">
               All ({orders.length})
@@ -475,9 +482,17 @@ export function OrderVerificationPanel() {
                 <div className="flex-1 min-w-0">
                   <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-3">
                     <div className="min-w-0">
-                      <h3 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white truncate">
-                        {order.product?.name || 'Unknown Product'}
-                      </h3>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h3 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white truncate">
+                          {order.product?.name || 'Unknown Product'}
+                        </h3>
+                        {order.bundleId && (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-[10px] sm:text-xs font-semibold rounded-full">
+                            <Gift className="h-3 w-3" />
+                            {order.bundleName || 'Bundle'}
+                          </span>
+                        )}
+                      </div>
                       <p className="text-xs sm:text-sm font-mono text-gray-500 dark:text-gray-400">
                         ID: {order.id.slice(0, 8)}...
                       </p>

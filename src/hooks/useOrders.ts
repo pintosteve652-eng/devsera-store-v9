@@ -223,7 +223,8 @@ export function useAdminOrders() {
         .select(`
           *,
           product:products(*),
-          profile:profiles(*)
+          profile:profiles(*),
+          bundle:bundles(id, name)
         `)
         .order('created_at', { ascending: false });
 
@@ -234,6 +235,8 @@ export function useAdminOrders() {
           id: o.id,
           userId: o.user_id,
           productId: o.product_id,
+          bundleId: o.bundle_id || undefined,
+          bundleName: o.bundle?.name || undefined,
           status: o.status as OrderStatus,
           totalAmount: o.total_amount || undefined,
           paymentScreenshot: o.payment_screenshot || undefined,
