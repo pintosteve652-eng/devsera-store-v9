@@ -335,6 +335,56 @@ export type Database = {
           },
         ]
       }
+      contact_requests: {
+        Row: {
+          admin_response: string | null
+          created_at: string | null
+          email: string
+          id: string
+          message: string
+          name: string
+          responded_at: string | null
+          responded_by: string | null
+          status: string | null
+          subject: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          admin_response?: string | null
+          created_at?: string | null
+          email: string
+          id?: string
+          message: string
+          name: string
+          responded_at?: string | null
+          responded_by?: string | null
+          status?: string | null
+          subject?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          admin_response?: string | null
+          created_at?: string | null
+          email?: string
+          id?: string
+          message?: string
+          name?: string
+          responded_at?: string | null
+          responded_by?: string | null
+          status?: string | null
+          subject?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contact_requests_responded_by_fkey"
+            columns: ["responded_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       coupons: {
         Row: {
           code: string
@@ -936,6 +986,7 @@ export type Database = {
           created_at: string
           custom_requirements_label: string | null
           custom_user_sees_label: string | null
+          customer_requirement_message: string | null
           delivery_instructions: string | null
           delivery_type: string | null
           description: string
@@ -951,6 +1002,7 @@ export type Database = {
           manual_stock_count: number | null
           name: string
           original_price: number
+          post_purchase_message: string | null
           requires_password: boolean | null
           requires_user_input: boolean | null
           sale_price: number
@@ -966,6 +1018,7 @@ export type Database = {
           created_at?: string
           custom_requirements_label?: string | null
           custom_user_sees_label?: string | null
+          customer_requirement_message?: string | null
           delivery_instructions?: string | null
           delivery_type?: string | null
           description: string
@@ -981,6 +1034,7 @@ export type Database = {
           manual_stock_count?: number | null
           name: string
           original_price: number
+          post_purchase_message?: string | null
           requires_password?: boolean | null
           requires_user_input?: boolean | null
           sale_price: number
@@ -996,6 +1050,7 @@ export type Database = {
           created_at?: string
           custom_requirements_label?: string | null
           custom_user_sees_label?: string | null
+          customer_requirement_message?: string | null
           delivery_instructions?: string | null
           delivery_type?: string | null
           description?: string
@@ -1011,6 +1066,7 @@ export type Database = {
           manual_stock_count?: number | null
           name?: string
           original_price?: number
+          post_purchase_message?: string | null
           requires_password?: boolean | null
           requires_user_input?: boolean | null
           sale_price?: number

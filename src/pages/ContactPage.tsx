@@ -6,6 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
 import { useToast } from '@/components/ui/use-toast';
+import { supabase } from '@/lib/supabase';
 import { 
   MessageCircle, 
   Mail, 
@@ -42,16 +43,36 @@ export function ContactPage() {
 
     setIsSubmitting(true);
     
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    toast({
-      title: 'Message sent!',
-      description: 'We\'ll get back to you as soon as possible.',
-    });
-    
-    setFormData({ name: '', email: '', subject: '', message: '' });
-    setIsSubmitting(false);
+    try {
+      // Insert into contact_requests table
+      const { error } = await (supabase as any)
+        .from('contact_requests')
+        .insert({
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          subject: formData.subject.trim() || null,
+          message: formData.message.trim(),
+          status: 'pending'
+        });
+
+      if (error) throw error;
+      
+      toast({
+        title: 'Message sent!',
+        description: 'We\'ll get back to you as soon as possible.',
+      });
+      
+      setFormData({ name: '', email: '', subject: '', message: '' });
+    } catch (error: any) {
+      console.error('Error submitting contact form:', error);
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to send message. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const telegramUsername = settings?.telegramUsername || '@karthik_nkn';

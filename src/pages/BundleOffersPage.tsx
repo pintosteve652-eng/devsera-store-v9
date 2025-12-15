@@ -141,10 +141,15 @@ export function BundleOffersPage() {
                     {/* CTA Button */}
                     <Button 
                       className="w-full rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold shadow-lg shadow-purple-500/25"
-                      onClick={() => navigate(`/contact`)}
+                      onClick={() => navigate(`/checkout`, { 
+                        state: { 
+                          bundle: bundle,
+                          isBundle: true
+                        } 
+                      })}
                     >
                       <Sparkles className="h-4 w-4 mr-2" />
-                      Get This Bundle
+                      Buy This Bundle
                       <ArrowRight className="h-4 w-4 ml-2" />
                     </Button>
                   </CardContent>
