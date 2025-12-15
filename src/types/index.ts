@@ -167,6 +167,8 @@ export interface Order {
   variant?: ProductVariant;
   product?: Product;
   profile?: OrderProfile;
+  bundleId?: string;
+  bundleName?: string;
   status: OrderStatus;
   totalAmount?: number; // Actual amount paid (may differ from product price during flash sales)
   paymentScreenshot?: string;

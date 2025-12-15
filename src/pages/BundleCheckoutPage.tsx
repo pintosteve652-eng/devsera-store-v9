@@ -124,7 +124,7 @@ export function BundleCheckoutPage() {
     setIsUploading(true);
 
     try {
-      // Create orders for each product in the bundle
+      // Create orders for each product in the bundle with bundle_id reference
       const orderIds: string[] = [];
       
       for (const product of bundle.products) {
@@ -135,7 +135,8 @@ export function BundleCheckoutPage() {
             product_id: product.id,
             status: 'PENDING',
             fulfillment_method: 'MANUAL',
-          })
+            bundle_id: bundle.id, // Track which bundle this order belongs to
+          } as any)
           .select()
           .single();
 
