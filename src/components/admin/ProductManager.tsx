@@ -45,7 +45,7 @@ const fulfillmentMethodInfo: Record<FulfillmentMethod, { label: string; icon: Re
   }
 };
 
-const deliveryTypeInfo: Record<DeliveryType, { label: string; icon: React.ReactNode; description: string; color: string; defaultRequirements: string; defaultUserSees: string }> = {
+const deliveryTypeInfo: Record<string, { label: string; icon: React.ReactNode; description: string; color: string; defaultRequirements: string; defaultUserSees: string }> = {
   CREDENTIALS: {
     label: 'Login Credentials',
     icon: <Key className="h-4 w-4" />,
@@ -77,7 +77,19 @@ const deliveryTypeInfo: Record<DeliveryType, { label: string; icon: React.ReactN
     color: 'bg-green-100 text-green-700 border-green-300',
     defaultRequirements: 'Add keys to stock - they will be auto-assigned on purchase',
     defaultUserSees: 'Customer will receive key instantly after payment verification'
+  },
+  MANUAL: {
+    label: 'Manual Delivery',
+    icon: <UserCheck className="h-4 w-4" />,
+    description: 'Product is delivered manually by admin',
+    color: 'bg-gray-100 text-gray-700 border-gray-300',
+    defaultRequirements: 'Admin will manually deliver the product',
+    defaultUserSees: 'Admin will contact you with delivery details'
   }
+};
+
+const getDeliveryInfo = (type: string | undefined | null) => {
+  return deliveryTypeInfo[type || 'CREDENTIALS'] || deliveryTypeInfo['CREDENTIALS'];
 };
 
 const emptyProduct: Partial<Product> = {
@@ -972,9 +984,9 @@ export function ProductManager() {
                         )}
                       </div>
                       <div className="flex items-center gap-2 mt-3">
-                        <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium border ${deliveryTypeInfo[product.deliveryType || 'CREDENTIALS'].color}`}>
-                          {deliveryTypeInfo[product.deliveryType || 'CREDENTIALS'].icon}
-                          <span className="hidden sm:inline">{deliveryTypeInfo[product.deliveryType || 'CREDENTIALS'].label}</span>
+                        <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium border ${getDeliveryInfo(product.deliveryType).color}`}>
+                          {getDeliveryInfo(product.deliveryType).icon}
+                          <span className="hidden sm:inline">{getDeliveryInfo(product.deliveryType).label}</span>
                         </div>
                         <button
                           onClick={() => openStockDialog(product)}
@@ -1077,9 +1089,9 @@ export function ProductManager() {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${deliveryTypeInfo[product.deliveryType || 'CREDENTIALS'].color}`}>
-                        {deliveryTypeInfo[product.deliveryType || 'CREDENTIALS'].icon}
-                        <span>{deliveryTypeInfo[product.deliveryType || 'CREDENTIALS'].label}</span>
+                      <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${getDeliveryInfo(product.deliveryType).color}`}>
+                        {getDeliveryInfo(product.deliveryType).icon}
+                        <span>{getDeliveryInfo(product.deliveryType).label}</span>
                       </div>
                       {product.hasVariants && (
                         <Badge variant="outline" className="ml-2 text-xs border-purple-300 text-purple-600">
@@ -1733,12 +1745,12 @@ export function ProductManager() {
                 </div>
 
                 {editingProduct?.deliveryType ? (
-                  <div className={`p-4 rounded-xl border-2 ${deliveryTypeInfo[editingProduct.deliveryType as DeliveryType].color} bg-opacity-50`}>
+                  <div className={`p-4 rounded-xl border-2 ${getDeliveryInfo(editingProduct.deliveryType).color} bg-opacity-50`}>
                     <div className="flex items-center gap-2 mb-4">
                       <div className="p-1.5 rounded-lg bg-white/50 dark:bg-black/20">
-                        {deliveryTypeInfo[editingProduct.deliveryType as DeliveryType].icon}
+                        {getDeliveryInfo(editingProduct.deliveryType).icon}
                       </div>
-                      <span className="font-bold">{deliveryTypeInfo[editingProduct.deliveryType as DeliveryType].label}</span>
+                      <span className="font-bold">{getDeliveryInfo(editingProduct.deliveryType).label}</span>
                     </div>
                     
                     {/* Customer Requirements Message */}
